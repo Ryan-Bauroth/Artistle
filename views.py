@@ -1,10 +1,14 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for
 import spotipy
+import os
+from dotenv import load_dotenv
 
-username = '5kc94lvvguorox0svsa7kfm9i'
-clientID = 'aa6fce7db87347c5b5d0690f32ad1dd1'
-clientSecret = 'dbe95efa14544260bf8e2e1e61a29345'
-redirect_uri = 'http://google.com/'
+load_dotenv()
+
+username = os.getenv('USERNAME')
+clientID = os.getenv('CLIENT_ID')
+clientSecret = os.getenv('CLIENT_SECRET')
+redirect_uri = os.getenv('REDIRECT_URI')
 
 oauth_object = spotipy.SpotifyOAuth(clientID, clientSecret, redirect_uri, scope="user-modify-playback-state")
 token_dict = oauth_object.get_access_token()
@@ -12,7 +16,7 @@ token = token_dict['access_token']
 spotifyObject = spotipy.Spotify(auth=token)
 user_name = spotifyObject.current_user()
 
-results = spotifyObject.search("hello", 1, 0, "track")
+results = spotifyObject.search("yebbas hearbreak", 1, 0, "track")
 
 songs_dict = results['tracks']
 song_items = songs_dict['items']
@@ -29,7 +33,7 @@ def home():
 
 @views.route("/single-player")
 def single_player():
-    return render_template('single-player.html', song_link=song)
+    return render_template('single-player.html', song_one=song)
 
 
 @views.route("/profile")

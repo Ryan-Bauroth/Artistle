@@ -38,4 +38,4 @@ song = song_items[0]['preview_url']
 print(song)
 
 
-print(json.dumps(spotifyObject.recommendation_genre_seeds(), sort_keys=True, indent=4))
+#print(json.dumps(spotifyObject.recommendation_genre_seeds(), sort_keys=True, indent=4))

@@ -3,7 +3,8 @@ var music = new Audio()
 
 function playMusic(){
     if(!currentlyPlaying){
-        music = new Audio(document.getElementById("hidden").textContent);
+        if(document.getElementById('artist_input').value !== "")
+            music = new Audio(document.getElementById("artist_input").value);
         music.play();
         currentlyPlaying = true;
         music.addEventListener("ended", function(){
