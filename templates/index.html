@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<style>
+  h1  {text-align: center;}
+  /*button {display:inline-block;}*/
+  #home_button_container {text-align: center;}
+</style>
+<body>
+    <div>
+        {% block content %}
+        <h1>Spotfi</h1>
+        <div id="home_button_container">
+            <button onclick="window.location.href=window.location.href + '/profile'">Single Player {{name}}</button>
+            <button>Multi Player</button>
+        </div>
+        {% endblock %}
+    </div>
+    <script type="text/javascript" src="{{url_for('static', filename='index.js')}}">
+    </script>
+</body>
+</html>
