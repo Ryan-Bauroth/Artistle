@@ -30,7 +30,7 @@ def getuserinput():
     search_album = input("Enter song album: ")
     return search_album + search_song + search_artist
 
-results = spotifyObject.search(getuserinput(), 1, 0, "track")
+results = spotifyObject.search(getuserinput(), 10, 0, "track")
 print(json.dumps(results, sort_keys=True, indent=4))
 songs_dict = results['tracks']
 song_items = songs_dict['items']

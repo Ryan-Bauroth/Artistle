@@ -21,7 +21,7 @@ results = spotifyObject.search("yebbas hearbreak", 1, 0, "track")
 songs_dict = results['tracks']
 song_items = songs_dict['items']
 song = song_items[0]['preview_url']
-print(song)
+print(results)
 
 views = Blueprint(__name__, "views")
 
