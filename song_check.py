@@ -6,6 +6,5 @@ def song_check(guessed_song,actual_song):
     else:
         return False
 
-print(song_check("Akfk lD","akFKl d"))
 
         
