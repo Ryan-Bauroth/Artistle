@@ -17,11 +17,9 @@ To run this project, you will need a Spotify Developer account. This lets you ac
 Dependancies:
 ```
 $ pip install flask
-
 ```
 ```
 $ pip install spotipy
-
 ```
 	
 ## Start
@@ -29,5 +27,4 @@ To run this project, run the app.py file
 
 ```
 $ python app.py
-
 ```
