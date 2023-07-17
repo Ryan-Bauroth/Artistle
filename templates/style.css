@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;800&display=swap');
+
+#home_body{
+  background-color:rgb(24,24,26);
+}
+#home_title_div{
+  text-align: center;
+  color: white;
+  backdrop-filter: blur(5px);
+  font-family: Rubik, sans-serif;
+}
+
+ul {
+  list-style-type: none;
+}
+#start_button{
+  z-index: -99;
+  position: fixed;
+  bottom: 10%;
+  left: 50%;
+  transform: translate(-50%,0);
+  
+  background-color: rgb(44,44,46);
+  border:none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px;
+  opacity: 1;
+  font-family: Rubik, sans-serif;
+}
+#start_button:hover {
+  opacity: .8
+}
+#name_underline{
+  border-top: 1px solid white;
+  height: 5px;
+  border-bottom: 1px solid white;
+  width: 15%;
+  margin: auto;
+  margin-bottom: 2.5%;
+}
+#home_title{
+  margin-bottom: .75%;
+}
