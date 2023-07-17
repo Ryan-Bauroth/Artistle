@@ -1,64 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
-    <meta charset="UTF-8">
-    <title>Home</title>
+  <meta charset="UTF-8">
+  <title>CodePen - Home Page (Heardle)</title>
+  <link rel="stylesheet" href="./style.css">
+
 </head>
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;800&display=swap');
-
-    #home_body{
-      background-color:rgb(24,24,26);
-    }
-    #home_title_div{
-      text-align: center;
-      color: white;
-      backdrop-filter: blur(5px);
-      font-family: Rubik, sans-serif;
-    }
-    #start_button{
-      position: fixed;
-      bottom: 5%;
-      left: 50%;
-      transform: translate(-50%,0);
-
-      background-color: rgb(44,44,46);
-      border:none;
-      color: white;
-      padding: 15px 32px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      border-radius: 4px;
-      opacity: 1;
-      font-family: Rubik, sans-serif;
-    }
-    #start_button:hover {
-      opacity: .8
-    }
-    #name_underline{
-      border-top: 1px solid white;
-      height: 5px;
-      border-bottom: 1px solid white;
-      width: 15%;
-      margin: auto;
-      margin-bottom: 2.5%;
-    }
-    #home_title{
-      margin-bottom: .75%;
-    }
-</style>
+<body>
+<!-- partial:index.partial.html -->
 <body id="home_body">
-    <div>
-        {% block content %}
-            <div id="home_title_div">
-              <h1 id="home_title">Spotfi</h1>
-              <div id="name_underline"></div>
-              <p>Description</p>
-            </div>
-            <button id="start_button" onclick="window.location.href=window.location.href + '/single-player'">Start</button>
-        {% endblock %}
+  
+  <title>Automatic Popup</title>
+    <!--Google Fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <!--Stylesheets-->
+    <style media="screen">
+    	*,
+*:before,
+*:after{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+ul{
+    list-style-type: none;
+}
+body{
+    background-color: #0855ae;
+}
+.popup{
+    background-color: #ffffff;
+    width: 420px;
+    padding: 30px 40px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+    border-radius: 8px;
+    font-family: "Poppins",sans-serif;
+    display: none; 
+    text-align: center;
+}
+
+.popup h2{
+	margin-top: -20px;
+}
+.popup p{
+    font-size: 14px;
+    text-align: justify;
+    margin: 20px 0;
+    line-height: 25px;
+}
+button{
+    display: block;
+    width: 150px;
+    position: relative;
+    margin: 10px auto;
+    text-align: center;
+    background-color: #1DB954;
+		border-radius: 20px;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 8px 0;
+}
+    </style>
+</head>
+<body>
+    <div class="popup">
+        
+        <h2>Welcome to Artistle!</h2>
+        <ul>
+            
+          <li>Select any artist you desire</li>
+          <li>Try to guess the artist’s songs within 10 seconds</li>
+          <li>Be quick! The faster you guess, the more points you get!</li>
+          <li>Streaks will boost your score</li>
+          <li>Try to get as many points as possible in 10 rounds</li>
+          <li>Change the artist whenever you wish and start again!</li>
+Press OK to close this pop-up and START to play
+
+        </ul>
+        <button id="close">OK</button>
     </div>
+    <!--Script-->
+    <script type="text/javascript">
+window.addEventListener("load", function(){
+    setTimeout(
+        function open(event){
+            document.querySelector(".popup").style.display = "block";
+        },
+        2000 
+    )
+});
+
+
+document.querySelector("#close").addEventListener("click", function(){
+    document.querySelector(".popup").style.display = "none";
+});
+    </script>
+</body>
+
+    <div id="home_title_div">
+      <h1 id="home_title">Artistle</h1>
+      <div id="name_underline"></div>
+    </div>
+  <button id="start_button">Start</button>
+</body>
+<!-- partial -->
+  
 </body>
 </html>
