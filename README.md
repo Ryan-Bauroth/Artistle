@@ -6,7 +6,7 @@
 * [Start](#Start)
 
 ## Description
-The Swiftle (https://www.techyonic.co/swiftle), one of the most import contributions to humanity since sliced baguettes, is almost perfect. Yet, it is missing one crutial thing: Customization. This is why we embarked on our journey to create Artistle. Artistle allows users to play a song guessing game including their favorite artist (presumably Taylor Swift). All you have to do is choose your artist! Artistle will pick a random song and play it. Now it is up to you to guess the name. Watch out though! You only have 10 seconds. Will you be able to meet Artistle's challange? Or will you be drowned out by the music? That's up to you to find out!
+The Swiftle (https://www.techyonic.co/swiftle), one of the most import contributions to humanity since sliced baguettes, is almost perfect. Yet, it is missing one crucial thing: Customization. This is why we embarked on our journey to create Artistle. Artistle allows users to play a fun song guessing game. All you have to do is pick your favorite artist! Artistle will pick a random song and play it. Now it is up to you to guess the name. Watch out though! You only have 10 seconds. Will you be able to meet Artistle's challenge? Or will you be drowned out by the music? That's up to you to find out!
 
 ## Installation
 This project is created with:
