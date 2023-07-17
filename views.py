@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 
 # abstracted variables
-artist_autofill_number = 5
+ARTIST_AUTOFILL_NUMBER = 5
 
 load_dotenv()
 
@@ -65,7 +65,7 @@ def go_to_home():
 """ Method artist_autofill
     Searches for the top spotify artists using the query input
     @param query current user input under the "artist" input
-    @return artist_names the first (artist_autofill_number amount) artists in a list format
+    @return artist_names the first (ARTIST_AUTOFILL_NUMBER amount) artists in a list format
 """
 
 
@@ -74,7 +74,7 @@ def artist_autofill(query):
     results = spotifyObject.search(q=query, type='artist')
     for item in results['artists']['items']:
         artist_names.append(item['name'])
-    return artist_names[:artist_autofill_number]
+    return artist_names[:ARTIST_AUTOFILL_NUMBER]
 
 
 """ Method check_user_answer
