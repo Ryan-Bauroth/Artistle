@@ -1,9 +1,11 @@
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
+
 def search_artists(query):
-    client_credentials_manager = SpotifyClientCredentials(client_id='',
-                                                          client_secret='')
+    finallist = []
+    client_credentials_manager = SpotifyClientCredentials(CLIENT_ID,
+                                                          CLIENT_SECRET)
     sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
     artist_names = []
 
@@ -12,5 +14,11 @@ def search_artists(query):
     for item in results['artists']['items']:
         artist_names.append(item['name'])
 
-    return artist_names
+    finallist = artist_names[:5]
+    return finallist
+
+    
+
+
+
 
