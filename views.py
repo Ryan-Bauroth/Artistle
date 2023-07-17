@@ -3,6 +3,9 @@ import spotipy
 import os
 from dotenv import load_dotenv
 
+# abstracted variables
+artist_autofill_number = 5
+
 load_dotenv()
 
 username = os.getenv('USERNAME')
@@ -57,3 +60,32 @@ def get_data():
 @views.route("/gotohome")
 def go_to_home():
     return redirect(url_for("views.home"))
+
+
+""" Method artist_autofill
+    Searches for the top spotify artists using the query input
+    @param query current user input under the "artist" input
+    @return artist_names the first (artist_autofill_number amount) artists in a list format
+"""
+
+
+def artist_autofill(query):
+    artist_names = []
+    results = spotifyObject.search(q=query, type='artist')
+    for item in results['artists']['items']:
+        artist_names.append(item['name'])
+    return artist_names[:artist_autofill_number]
+
+
+""" Method check_user_answer
+    Checks if the the user's guess is correct
+    @param guessed_song, actual_song the user input, the correct answer
+    @return True if correct False if otherwise
+"""
+
+
+def check_user_answer(guessed_song, actual_song):
+    if guessed_song.lower().strip() == actual_song.lower().strip():
+        return True
+    else:
+        return False
