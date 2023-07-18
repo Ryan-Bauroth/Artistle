@@ -3,7 +3,7 @@
 ## Table of contents
 * [Description](#Description)
 * [Installation](#Installation)
-* [Spotify Developer](#Spotify Developer)
+* [Spotify Developer](#SpotifyDeveloper)
 * [Start](#Start)
 
 ## Description
