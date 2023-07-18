@@ -20,24 +20,17 @@ token = token_dict['access_token']
 spotifyObject = spotipy.Spotify(auth=token)
 user_name = spotifyObject.current_user()
 
-results = spotifyObject.search("yebbas hearbreak", 1, 0, "track")
-
-songs_dict = results['tracks']
-song_items = songs_dict['items']
-song = song_items[0]['preview_url']
-print(results)
-
 views = Blueprint(__name__, "views")
 
 
 @views.route("/")
 def home():
-    return render_template('index.html', name="tim")
+    return render_template('index.html')
 
 
 @views.route("/single-player")
 def single_player():
-    return render_template('single-player.html', song_one=song)
+    return render_template('single-player.html')
 
 
 @views.route("/profile")
@@ -101,3 +94,83 @@ def check_user_answer(guessed_song, actual_song):
 
 def select_single_song(song_list):
     return random.choice(song_list)
+
+
+""" Method song_autofill
+    cem...
+"""
+
+
+def song_autofill(song_list, user_input):
+    names_list = []
+    final_list = []
+
+    for i in range(len(song_list)):
+        names_list.append(song_list[i].split("-")[0])
+
+    for i in range(len(names_list)):
+        if names_list[i].lower().strip().__contains__(user_input.lower()):
+            final_list.append(names_list[i])
+
+    return final_list
+
+
+def get_artist_songs(artist_name):
+    songs_list = []  # creates list for all artist that include the given 'artist_name' in their names
+    artist_list = []  # creates list for songs of the chosen artist
+
+    results = spotifyObject.search(q=artist_name, type='artist')  # gets the artists from spotify
+
+    for item in results['artists']['items']:  # Adds the artist names to the list
+        artist_list.append(item['name'])
+
+    results = spotifyObject.search(q="artist:" + artist_list[0], type='track',
+                                   limit=50)  # gets 50 songs from artists that include 'given artist' in their name
+
+    for track in results['tracks']['items']:
+        song_name = track['name']  # gets the name of the song
+        preview_url = track['preview_url']  # gets the url of the song
+
+        artist_check = track['artists'][0]['name']  # gets the artist of the song from song url
+
+        if song_name and preview_url and artist_check.lower().strip() == artist_name.lower().strip():
+            songs_list.append(
+                song_name + "-" + preview_url)  # checks if the artist of the song is the needed one and creates a list with the name+url
+
+    songs_list = []
+    artist_list = []
+
+    results = spotifyObject.search(q=artist_name, type='artist')
+
+    for item in results['artists']['items']:
+        artist_list.append(item['name'])
+
+    results = spotifyObject.search(q="artist:" + artist_list[0], type='track', limit=50)
+
+    for track in results['tracks']['items']:
+        song_name = track['name']
+        preview_url = track['preview_url']
+
+        artist_check = track['artists'][0]['name']
+
+        if song_name and preview_url and artist_check.lower().strip() == artist_name.lower().strip():
+            songs_list.append(f"{song_name}-{preview_url} ")
+
+    return songs_list
+
+
+"""
+"""
+
+
+def artist_check(artist_name):
+    if len(get_artist_songs(artist_name)) >= 10:
+        return artist_name  # if artist has more than 10 playable songs, returns artist
+
+    elif len(get_artist_songs(artist_name)) < 10 and len(get_artist_songs(artist_name)) > 0:
+        return artist_name + "&%!", len(get_artist_songs(
+            artist_name))  # if artist has between 1 and 10 playable songs, returns a different code that will allow a pop up disclaimer warning the player about the small song amount. Returns length of song list.
+
+    else:
+        no_url = "Artist_has_no_url"
+        return no_url  # if artist has no playable songs, returns an error
