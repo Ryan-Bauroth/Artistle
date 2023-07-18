@@ -1,64 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-</head>
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;800&display=swap');
-
-    #home_body{
-      background-color:rgb(24,24,26);
-    }
-    #home_title_div{
-      text-align: center;
-      color: white;
-      backdrop-filter: blur(5px);
-      font-family: Rubik, sans-serif;
-    }
-    #start_button{
-      position: fixed;
-      bottom: 5%;
-      left: 50%;
-      transform: translate(-50%,0);
-
-      background-color: rgb(44,44,46);
-      border:none;
-      color: white;
-      padding: 15px 32px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      border-radius: 4px;
-      opacity: 1;
-      font-family: Rubik, sans-serif;
-    }
-    #start_button:hover {
-      opacity: .8
-    }
-    #name_underline{
-      border-top: 1px solid white;
-      height: 5px;
-      border-bottom: 1px solid white;
-      width: 15%;
-      margin: auto;
-      margin-bottom: 2.5%;
-    }
-    #home_title{
-      margin-bottom: .75%;
-    }
-</style>
-<body id="home_body">
-    <div>
-        {% block content %}
-            <div id="home_title_div">
-              <h1 id="home_title">Spotfi</h1>
-              <div id="name_underline"></div>
-              <p>Description</p>
-            </div>
-            <button id="start_button" onclick="window.location.href=window.location.href + '/single-player'">Start</button>
-        {% endblock %}
-    </div>
-</body>
-</html>
+    <title>Automatic Popup</title>
+      <link rel="stylesheet" type="text/css" href="../static/css/formatting.css" />
+      <style media="screen"></style>
+  </head>
+  <body id="home_body">
+      <div class="popup">
+          <h2>Welcome to Artistle!</h2>
+          <ul id="description">
+              <li>Select any artist you desire</li>
+              <li>Try to guess the artist’s songs within 10 seconds</li>
+              <li>Be quick! The faster you guess, the more points you get!</li>
+              <li>Streaks will boost your score</li>
+              <li>Try to get as many points as possible in 10 rounds</li>
+              <li>Change the artist whenever you wish and start again!</li>
+              Press OK to close this pop-up and START to play
+          </ul>
+          <button id="close">OK</button>
+      </div>
+      <div id="home_title_div">
+        <h1 id="home_title">Artistle</h1>
+        <div id="name_underline"></div>
+      </div>
+    <button id="start_button">Start</button>
+  </body>
+<script type="text/javascript" src="../static/index.js"></script>
