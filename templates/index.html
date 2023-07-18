@@ -1,28 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
-    <meta charset="UTF-8">
-    <title>Artistle</title>
-</head>
 <body id="home_body">
-    <div class="popup">
-        <h2>Welcome to Artistle!</h2>
-        <ul>
+  
+    <title>Automatic Popup</title>
+      <!--Google Fonts-->
+      <!--Stylesheets-->
+      <link rel="stylesheet" type="text/css" href="formatting.css" />
+      <style media="screen"></style>
+  </head>
+  
+      <div class="popup">
+          
+          <h2>Welcome to Artistle!</h2>
+          <ul>
+              
             <li>Select any artist you desire</li>
             <li>Try to guess the artist’s songs within 10 seconds</li>
             <li>Be quick! The faster you guess, the more points you get!</li>
             <li>Streaks will boost your score</li>
             <li>Try to get as many points as possible in 10 rounds</li>
             <li>Change the artist whenever you wish and start again!</li>
-            Press OK to close this pop-up and START to play
-        </ul>
-        <button id="close">OK</button>
-    </div>
-    <div id="home_title_div">
-      <h1 id="home_title">Artistle</h1>
-      <div id="name_underline"></div>
-    </div>
-  <button id="start_button">Start</button>
-</body>
-</html>
+  Press OK to close this pop-up and START to play
+  
+          </ul>
+          <button id="close">OK</button>
+      </div>
+      <!--Script-->
+      <script type="text/javascript" src="index.js"></script>
+  
+  
+      <div id="home_title_div">
+        <h1 id="home_title">Artistle</h1>
+        <div id="name_underline"></div>
+      </div>
+    <button id="start_button">Start</button>
+  </body>
