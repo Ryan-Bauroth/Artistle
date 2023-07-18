@@ -174,3 +174,17 @@ def artist_check(artist_name):
     else:
         no_url = "Artist_has_no_url"
         return no_url  # if artist has no playable songs, returns an error
+
+
+def calculate(guess_time, streak,
+              previous_score):  # insert guess time in ms, streak and total score from other rounds(if it is the
+    # first round, give 0)
+
+    org_point = 1000
+    streak_multiplier = 1.02  # the score will get multiplied by the multiplier^streak
+    time_penalty = guess_time / 2  # the points that will be subtracted from org_point
+
+    point = (org_point - time_penalty) * streak_multiplier ^ streak  # calculates point earned from only the last song
+    total_point = point + previous_score  # calculates the total point of player
+
+    return total_point, point  # returns final point for total
