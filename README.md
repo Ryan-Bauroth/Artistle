@@ -3,6 +3,7 @@
 ## Table of contents
 * [Description](#Description)
 * [Installation](#Installation)
+* [Spotify Developer](#Spotify Developer)
 * [Start](#Start)
 
 ## Description
@@ -20,6 +21,7 @@ $ pip install flask
 $ pip install spotipy
 ```
 
+## Spotify Developer
 To run this project, you will need a Spotify Developer account. This lets you access your own Client_Id and Client_Secret variables. Unfortunatly we can't share these with you!
 * Create a spotify developer account
 * Add your ClientID and Client Secret and now your code should look like this:
