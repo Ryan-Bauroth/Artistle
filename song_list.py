@@ -25,7 +25,6 @@ def get_artist_songs(artist_name):
 
 
         artist_check = track['artists'][0]['name']
-        print(artist_check)
 
 
         if song_name and preview_url and artist_check.lower().strip()==artist_name.lower().strip():
