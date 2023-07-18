@@ -28,7 +28,7 @@ def get_artist_songs(artist_name):
 
 
         if song_name and preview_url and artist_check.lower().strip()==artist_name.lower().strip():  
-            songs_list.append(f"{song_name}-{preview_url} ")    #checks if the artist of the song is the needed one and creates a list with the name+url
+            songs_list.append(song_name+"-"+preview_url)    #checks if the artist of the song is the needed one and creates a list with the name+url
 
 
     return songs_list
