@@ -12,14 +12,20 @@ The Swiftle (https://www.techyonic.co/swiftle), one of the most import contribut
 This project is created with:
 * Python 3.11
 
-To run this project, you will need a Spotify Developer account. This lets you access your own Client_Id and Client_Secret variables. Unfortunatly we can't share these with you!
-
 Dependancies:
 ```
 $ pip install flask
 ```
 ```
 $ pip install spotipy
+```
+
+To run this project, you will need a Spotify Developer account. This lets you access your own Client_Id and Client_Secret variables. Unfortunatly we can't share these with you!
+* Create a spotify developer account
+* Add your ClientID and Client Secret and now your code should look like this:
+```
+clientID = "YOUR CLIENT ID"
+clientSecret = "YOUR CLIENT SECRET"
 ```
 	
 ## Start
