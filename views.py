@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect, url_fo
 import spotipy
 import os
 from dotenv import load_dotenv
+import random
 
 # abstracted variables
 ARTIST_AUTOFILL_NUMBER = 5
@@ -89,3 +90,14 @@ def check_user_answer(guessed_song, actual_song):
         return True
     else:
         return False
+
+
+""" Method select_single_song
+    Chooses one random song from a list
+    @param song_list list of songs in format (song name - url)
+    @return a single song from the list (in the same format)
+"""
+
+
+def select_single_song(song_list):
+    return random.choice(song_list)
