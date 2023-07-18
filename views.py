@@ -176,7 +176,7 @@ def artist_check(artist_name):
         return no_url  # if artist has no playable songs, returns an error
 
 
-def calculate(guess_time, streak,
+def calculate_score(guess_time, streak,
               previous_score):  # insert guess time in ms, streak and total score from other rounds(if it is the
     # first round, give 0)
 
@@ -188,3 +188,11 @@ def calculate(guess_time, streak,
     total_point = point + previous_score  # calculates the total point of player
 
     return total_point, point  # returns final point for total
+
+def get_img_link(artist_name):
+    results = spotifyObject.search(q='artist:' + artist_name, type='artist')
+
+    items = results['artists']['items']
+    if len(items) > 0:
+        artist = items[0]
+        return artist['images'][0]['url']
