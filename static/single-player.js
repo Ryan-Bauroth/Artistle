@@ -9,19 +9,24 @@ document.body.appendChild(script);
 
 // CONSTS
 const SONG_INPUT = document.getElementById("song-input");
+const SONG_INPUT_BACKGROUND = document.getElementById("song-input-div");
 const ARTIST_INPUT = document.getElementById("artist-input");
 const ARTIST_INPUT_BACKGROUND = document.getElementById("artist-input-background")
+const ARTIST_LOAD_ICON = document.getElementById("artist-loader")
 
 
 // Global Variables
 let currentlyPlaying = false;
 let allowInput = true;
+let allowPlayMusic = false;
 let currentSongs = [];
+let backupCurrentSongs = [];
+let recentSongs = []
 let currentSongName = ""
 let music = new Audio()
 
 function playMusic(){
-    if(!currentlyPlaying){
+    if(!currentlyPlaying && allowPlayMusic){
         music.play();
         currentlyPlaying = true;
         music.addEventListener("ended", function(){
@@ -54,9 +59,13 @@ function editArtist(){
  */
 function submitArtist(){
     if(allowInput) {
+        allowPlayMusic = false;
         allowInput = false;
         ARTIST_INPUT_BACKGROUND.style.filter = "blur(1px)";
         ARTIST_INPUT.disabled = true;
+        SONG_INPUT.disabled = true;
+        SONG_INPUT_BACKGROUND.style.filter = "blur(1px)";
+        ARTIST_LOAD_ICON.style.opacity = "1";
         $.ajax({
             type: "POST",
             url: "/views/store_artist_check",
@@ -65,11 +74,14 @@ function submitArtist(){
             },
             data: {"input": document.getElementById("artist-input").value},
         }).done(function (data) {
+            SONG_INPUT.disabled = false;
+            SONG_INPUT_BACKGROUND.style.filter = "blur(0px)";
+            ARTIST_LOAD_ICON.style.opacity = "0";
             if (data !== "Artist_has_no_url") {
-                ARTIST_INPUT_BACKGROUND.style.filter = "blur(1px)";
-                ARTIST_INPUT.disabled = true;
+                allowPlayMusic = true;
                 currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(",");
                 currentSongs.shift();
+                backupCurrentSongs = currentSongs.slice(0);
                 //TODO add warning if limit
                 selectSong();
                 allowInput = true;
@@ -83,19 +95,32 @@ function submitArtist(){
 }
 function selectSong(){
     if(currentSongs.length > 0){
-         let x = Math.floor(Math.random()*currentSongs.length)
-         music = new Audio(currentSongs[x].split("|#&")[1]);
-         currentSongName = currentSongs[x].split("|#&")[0].trim();
-         currentSongs.splice(x,1)
-         console.log(currentSongName)
-        console.log(currentSongs)
+        let rand = getRandNumber()
+        let musicStart = Math.floor(Math.random() * 20)
+        console.log(musicStart)
+        music = new Audio(currentSongs[rand].split("|#&")[1] + "#t=" + musicStart.toString() + "," + (musicStart + 10).toString());
+        currentSongName = currentSongs[rand].split("|#&")[0].trim();
+        recentSongs.push(currentSongs[rand].split("|#&")[0].trim());
+        currentSongs.splice(rand,1);
+        if(backupCurrentSongs.length > 4 &&  recentSongs.length > 3)
+            recentSongs.shift();
+        console.log(currentSongName);
+        console.log(recentSongs)
     }
     else{
-        currentlyPlaying = false;
-        music.pause()
-        submitArtist();
-        //TODO figure out a better way to deal with getting low on songs (this takes load time)
+        currentSongs = backupCurrentSongs.slice(0);
+        selectSong();
     }
+}
+
+function getRandNumber(){
+    let rand = 0;
+    let hasRun = false
+    while(!hasRun && !recentSongs.includes(currentSongs[rand].split("|#&")[0].trim)) {
+        hasRun = true;
+        rand = Math.floor(Math.random() * currentSongs.length)
+    }
+    return rand;
 }
 
 
@@ -106,18 +131,15 @@ ARTIST_INPUT.addEventListener("keyup", function(event) {
 });
 
 SONG_INPUT.addEventListener("change", (event) => {
-    if(makeComparable(currentSongName) === makeComparable(SONG_INPUT.value) && currentlyPlaying){
+    if(cleanInput(currentSongName) === cleanInput(SONG_INPUT.value) && currentlyPlaying){
         //TODO streak
         SONG_INPUT.value = ""
         resetMusic();
         selectSong();
-        if(currentSongs.length > 0) {
-            playMusic();
-            //TODO TEST THIS THIS ISNT WORKING I DONT THINK
-        }
+        playMusic();
     }
 });
 
-function makeComparable(string){
+function cleanInput(string){
     return string.toLowerCase().trim().replace(/'/g,"").replace("?","").replace("!", "").replace(",","").replace(".","").replace(/"/g,"")
 }
