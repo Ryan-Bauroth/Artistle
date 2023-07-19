@@ -148,7 +148,7 @@ def get_artist_songs(artist_name):
     results = spotifyObject.search(q="artist:" + artist_list[0], type='track', limit=50)
 
     for track in results['tracks']['items']:
-        song_name = track['name']
+        song_name = track['name'].replace(",", "")
         preview_url = track['preview_url']
 
         artist_check = track['artists'][0]['name']
