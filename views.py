@@ -1,9 +1,8 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request
 import spotipy
 import os
 from dotenv import load_dotenv
 import random
-import json
 
 # abstracted variables
 ARTIST_AUTOFILL_NUMBER = 5

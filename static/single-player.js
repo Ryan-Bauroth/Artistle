@@ -13,6 +13,7 @@ const SONG_INPUT_BACKGROUND = document.getElementById("song-input-div");
 const ARTIST_INPUT = document.getElementById("artist-input");
 const ARTIST_INPUT_BACKGROUND = document.getElementById("artist-input-background")
 const ARTIST_LOAD_ICON = document.getElementById("artist-loader")
+const SONG_INPUT_AUTOCOMPLETE = document.getElementById("autocomplete-song-input")
 
 
 // Global Variables
@@ -26,7 +27,9 @@ let currentSongName = ""
 let music = new Audio()
 
 function playMusic(){
+    //TODO put input in focus
     if(!currentlyPlaying && allowPlayMusic){
+        SONG_INPUT.value = "";
         music.play();
         currentlyPlaying = true;
         music.addEventListener("ended", function(){
@@ -74,9 +77,9 @@ function submitArtist(){
             },
             data: {"input": document.getElementById("artist-input").value},
         }).done(function (data) {
-            SONG_INPUT.disabled = false;
             SONG_INPUT_BACKGROUND.style.filter = "blur(0px)";
             ARTIST_LOAD_ICON.style.opacity = "0";
+            SONG_INPUT.disabled = false;
             if (data !== "Artist_has_no_url") {
                 allowPlayMusic = true;
                 currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(",");
@@ -143,3 +146,25 @@ SONG_INPUT.addEventListener("change", (event) => {
 function cleanInput(string){
     return string.toLowerCase().trim().replace(/'/g,"").replace("?","").replace("!", "").replace(",","").replace(".","").replace(/"/g,"")
 }
+function setAutocomplete(){
+    if(!SONG_INPUT_AUTOCOMPLETE.firstChild){
+        for(let i = 0; i < backupCurrentSongs.length; i++){
+            let option = document.createElement("option");
+            option.value = backupCurrentSongs[i].split("|#&")[0].trim()
+            SONG_INPUT_AUTOCOMPLETE.appendChild(option);
+        }
+    }
+}
+
+SONG_INPUT.addEventListener("keyup", (e) => {
+    console.log("key pressed")
+    if(SONG_INPUT.value.length < 3 && (e.key === "Backspace" || e.key === "Delete" || e.key === "Clear" || e.key === "Cut")){
+        $(SONG_INPUT_AUTOCOMPLETE).empty();
+    }
+    else if (SONG_INPUT.value.length < 2){
+        $(SONG_INPUT_AUTOCOMPLETE).empty();
+    }
+    else{
+        setAutocomplete();
+    }
+})
