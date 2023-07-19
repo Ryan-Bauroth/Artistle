@@ -1,25 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-</head>
-<style>
-  h1  {text-align: center;}
-  /*button {display:inline-block;}*/
-  #home_button_container {text-align: center;}
-</style>
-<body>
-    <div>
-        {% block content %}
-        <h1>Spotfi</h1>
-        <div id="home_button_container">
-            <button onclick="window.location.href=window.location.href + '/single-player'">Single Player {{name}}</button>
-            <button>Multi Player</button>
-        </div>
-        {% endblock %}
-    </div>
-    <script type="text/javascript" src="{{url_for('static', filename='index.js')}}">
-    </script>
-</body>
-</html>
+    <title>Artistle</title>
+      <link rel="stylesheet" type="text/css" href="../static/css/formatting.css" />
+      <style media="screen"></style>
+  </head>
+  <body id="home_body">
+      <div class="popup">
+          <h2>Welcome to Artistle!</h2>
+          <ul id="description">
+              <li>Select any artist you desire</li>
+              <li>Try to guess the artist’s songs within 10 seconds</li>
+              <li>Be quick! The faster you guess, the more points you get!</li>
+              <li>Streaks will boost your score</li>
+              <li>Try to get as many points as possible in 10 rounds</li>
+              <li>Change the artist whenever you wish and start again!</li>
+              Press OK to close this pop-up and START to play
+          </ul>
+          <button id="close">OK</button>
+      </div>
+      <div id="home_title_div">
+        <h1 id="home_title">Artistle</h1>
+        <div id="name_underline"></div>
+      </div>
+    <button id="start_button">Start</button>
+  </body>
+<script type="text/javascript" src="../static/index.js"></script>
