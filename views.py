@@ -6,10 +6,10 @@ import random
 
 # abstracted variables
 ARTIST_AUTOFILL_NUMBER = 5
+artist_check_num = -2
 
 load_dotenv()
 
-username = os.getenv('USERNAME')
 clientID = os.getenv('CLIENT_ID')
 clientSecret = os.getenv('CLIENT_SECRET')
 redirect_uri = os.getenv('REDIRECT_URI')
@@ -33,27 +33,15 @@ def single_player():
     return render_template('single-player.html')
 
 
-@views.route("/profile")
-def profile():
-    args = request.args
-    name = args.get('name')
-    return render_template("profile.html")
-
-
-@views.route("/json")
-def get_json():
-    return jsonify({'name': 'tim', 'coolness': 10})
-
-
-@views.route("/data")
-def get_data():
-    data = request.json
-    return jsonify(data)
-
-
-@views.route("/gotohome")
-def go_to_home():
-    return redirect(url_for("views.home"))
+@views.route("/store_artist_check", methods=["POST"])
+def store_artist_check():
+    if request.method == 'POST':
+        artist_name = request.form['input']
+        check = artist_check(artist_name)
+        print(artist_name)
+        print(artist_check(artist_name))
+        print(get_artist_songs(artist_name, "Limit" if artist_name + "&%!" in check else "No Limit"))
+        return check if check == "Artist_has_no_url" else jsonify(get_artist_songs(artist_name, "Limit" if artist_name + "&%!" in check else "No Limit")), 202
 
 
 """ Method artist_autofill
@@ -115,7 +103,7 @@ def song_autofill(song_list, user_input):
     return final_list
 
 
-def get_artist_songs(artist_name):
+def get_artist_songs(artist_name, blank_space):
     songs_list = []  # creates list for all artist that include the given 'artist_name' in their names
     artist_list = []  # creates list for songs of the chosen artist
 
@@ -139,6 +127,10 @@ def get_artist_songs(artist_name):
 
     songs_list = []
     artist_list = []
+    if blank_space == "Limit":
+        songs_list.append("Limited Selection")
+    elif blank_space == "No Limit":
+        songs_list.append("")
 
     results = spotifyObject.search(q=artist_name, type='artist')
 
@@ -164,12 +156,13 @@ def get_artist_songs(artist_name):
 
 
 def artist_check(artist_name):
-    if len(get_artist_songs(artist_name)) >= 10:
+    if len(get_artist_songs(artist_name, "")) >= 10:
         return artist_name  # if artist has more than 10 playable songs, returns artist
 
-    elif len(get_artist_songs(artist_name)) < 10 and len(get_artist_songs(artist_name)) > 0:
-        return artist_name + "&%!", len(get_artist_songs(
-            artist_name))  # if artist has between 1 and 10 playable songs, returns a different code that will allow a pop up disclaimer warning the player about the small song amount. Returns length of song list.
+    elif len(get_artist_songs(artist_name, "")) < 10 and len(get_artist_songs(artist_name, "")) > 0:
+        return artist_name + "&%!", len(get_artist_songs(artist_name, ""))  # if artist has between 1 and 10 playable
+        # songs, returns a different code that will allow a pop up disclaimer warning the player about the small song
+        # amount. Returns length of song list.
 
     else:
         no_url = "Artist_has_no_url"
@@ -177,7 +170,7 @@ def artist_check(artist_name):
 
 
 def calculate_score(guess_time, streak,
-              previous_score):  # insert guess time in ms, streak and total score from other rounds(if it is the
+                    previous_score):  # insert guess time in ms, streak and total score from other rounds(if it is the
     # first round, give 0)
 
     org_point = 1000
@@ -188,6 +181,7 @@ def calculate_score(guess_time, streak,
     total_point = point + previous_score  # calculates the total point of player
 
     return total_point, point  # returns final point for total
+
 
 def get_img_link(artist_name):
     results = spotifyObject.search(q='artist:' + artist_name, type='artist')
