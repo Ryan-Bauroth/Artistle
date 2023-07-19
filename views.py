@@ -3,6 +3,7 @@ import spotipy
 import os
 from dotenv import load_dotenv
 import random
+import json
 
 # abstracted variables
 ARTIST_AUTOFILL_NUMBER = 5
@@ -41,7 +42,7 @@ def store_artist_check():
         print(artist_name)
         print(artist_check(artist_name))
         print(get_artist_songs(artist_name, "Limit" if artist_name + "&%!" in check else "No Limit"))
-        return check if check == "Artist_has_no_url" else jsonify(get_artist_songs(artist_name, "Limit" if artist_name + "&%!" in check else "No Limit")), 202
+        return check if check == "Artist_has_no_url" else get_artist_songs(artist_name, "Limit" if artist_name + "&%!" in check else "No Limit"), 202
 
 
 """ Method artist_autofill
@@ -104,27 +105,6 @@ def song_autofill(song_list, user_input):
 
 
 def get_artist_songs(artist_name, blank_space):
-    songs_list = []  # creates list for all artist that include the given 'artist_name' in their names
-    artist_list = []  # creates list for songs of the chosen artist
-
-    results = spotifyObject.search(q=artist_name, type='artist')  # gets the artists from spotify
-
-    for item in results['artists']['items']:  # Adds the artist names to the list
-        artist_list.append(item['name'])
-
-    results = spotifyObject.search(q="artist:" + artist_list[0], type='track',
-                                   limit=50)  # gets 50 songs from artists that include 'given artist' in their name
-
-    for track in results['tracks']['items']:
-        song_name = track['name']  # gets the name of the song
-        preview_url = track['preview_url']  # gets the url of the song
-
-        artist_check = track['artists'][0]['name']  # gets the artist of the song from song url
-
-        if song_name and preview_url and artist_check.lower().strip() == artist_name.lower().strip():
-            songs_list.append(
-                song_name + "-" + preview_url)  # checks if the artist of the song is the needed one and creates a list with the name+url
-
     songs_list = []
     artist_list = []
     if blank_space == "Limit":
@@ -136,6 +116,8 @@ def get_artist_songs(artist_name, blank_space):
 
     for item in results['artists']['items']:
         artist_list.append(item['name'])
+        if len(artist_list) > 0:
+            break
 
     results = spotifyObject.search(q="artist:" + artist_list[0], type='track', limit=50)
 
@@ -146,7 +128,7 @@ def get_artist_songs(artist_name, blank_space):
         artist_check = track['artists'][0]['name']
 
         if song_name and preview_url and artist_check.lower().strip() == artist_name.lower().strip():
-            songs_list.append(f"{song_name}-{preview_url} ")
+            songs_list.append(f"{song_name}|#&{preview_url} ")
 
     return songs_list
 
@@ -159,7 +141,7 @@ def artist_check(artist_name):
     if len(get_artist_songs(artist_name, "")) >= 10:
         return artist_name  # if artist has more than 10 playable songs, returns artist
 
-    elif len(get_artist_songs(artist_name, "")) < 10 and len(get_artist_songs(artist_name, "")) > 0:
+    elif 10 > len(get_artist_songs(artist_name, "")) > 0:
         return artist_name + "&%!", len(get_artist_songs(artist_name, ""))  # if artist has between 1 and 10 playable
         # songs, returns a different code that will allow a pop up disclaimer warning the player about the small song
         # amount. Returns length of song list.
