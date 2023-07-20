@@ -15,6 +15,10 @@ const ARTIST_INPUT_BACKGROUND = document.getElementById("artist-input-background
 const ARTIST_LOAD_ICON = document.getElementById("artist-loader");
 const SONG_INPUT_AUTOCOMPLETE = document.getElementById("autocomplete-song-input");
 const COUNTDOWN = document.getElementById("countdown");
+const SCORE = document.getElementById("score");
+
+const orgPoint = 1000;
+const streakMultiplier = 1.02;
 
 
 // Global Variables
@@ -27,6 +31,11 @@ let recentSongs = []
 let currentSongName = ""
 let music = new Audio()
 let countdownTimerInterval;
+let time = 0;
+let msTimerInterval;
+let streak = 0;
+let score = 0;
+let highScore = 0;
 
 function playMusic(){
     //TODO put input in focus
@@ -35,6 +44,7 @@ function playMusic(){
         music.play();
         currentlyPlaying = true;
         countdownTimerInterval = window.setInterval(countdown, 1000);
+        msTimerInterval = window.setInterval(calcMSTime, 10);
         music.addEventListener("ended", function(){
             music.currentTime = 0;
             currentlyPlaying = false;
@@ -139,6 +149,11 @@ SONG_INPUT.addEventListener("change", (event) => {
     if(cleanInput(currentSongName) === cleanInput(SONG_INPUT.value) && currentlyPlaying){
         //TODO streak
         SONG_INPUT.value = ""
+        score = calculateScore(time, streak, score);
+        SCORE.innerText = Math.round(score).toString();
+        console.log(score);
+        streak += 1;
+        time = 0;
         resetMusic();
         selectSong();
         resetCountdown();
@@ -164,6 +179,14 @@ function countdown(){
     else {
         COUNTDOWN.textContent = (Number(COUNTDOWN.textContent) - 1).toString();
         window.clearInterval(countdownTimerInterval)
+        window.clearInterval(msTimerInterval)
+        time = 0;
+        SCORE.innerText = ""
+        if(score > highScore){
+            highScore = score;
+        }
+        score = 0;
+        streak = 0;
         resetMusic();
         selectSong();
         resetCountdown();
@@ -175,4 +198,14 @@ function resetCountdown(){
         window.clearInterval(countdownTimerInterval)
     }
     COUNTDOWN.textContent = "10";
+}
+
+function calculateScore(guessTime, streak, previousScore) {
+    let timePenalty = guessTime / 2;
+    let point = (orgPoint - timePenalty) * Math.pow(streakMultiplier, streak);
+    return point + previousScore;
+}
+
+function calcMSTime(){
+    time += 1;
 }

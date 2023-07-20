@@ -78,6 +78,23 @@
   vertical-align: middle;
   display: table-cell;
 }
+#score-container{
+  position: absolute;
+  bottom: -65%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: table;
+}
+#score{
+  text-align: center;
+  color: var(--white);
+  font-size: 18px;
+  text-align: center;
+  font-family: Rubik, sans-serif;
+  vertical-align: middle;
+  display: table-cell;
+  font-weight: lighter;
+}
 
 /* Artist Selection */
 #artist-input-outline{
