@@ -8,6 +8,7 @@
   --spotify-green: rgb(70, 244, 102);
   --black: rgb(0,0,0);
   --white: rgb(255,255,255);
+  --pastel-pink: #ed719e;
 }
 
 /* Background */
@@ -37,7 +38,7 @@
 }
 #song-input{
   height: 38px;
-  width: 91%;
+  width: 84%;
   border-radius: 10px;
   background-color: var(--secondary-bg-color);
   outline: none;
@@ -45,31 +46,37 @@
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  left: 46.5%;
+  left: 50%;
   color: white;
   font-size:22px;
   text-align: center;
   font-family: Rubik, sans-serif;
 }
 #play-button{
-  border-radius: 50%;
+  fill: var(--pastel-pink);
   width: 38px;
   height: 38px;
-  outline: 2px solid var(--black);
-  border: none;
   position: absolute;
+  top: 50%;
   right: 6px;
-  top: 50%;
   transform: translateY(-50%);
-  background-color: var(--blue-gray);
 }
-#play-icon{
-  fill:var(--spotify-green);
-  height: 20px;
+#countdown-div{
+  width: 38px;
+  height: 38px;
   position: absolute;
   top: 50%;
-  left: 53%;
-  transform: translate(-50%, -50%);
+  left: 7px;
+  transform: translateY(-50%);
+  display: table;
+}
+#countdown{
+  text-align: center;
+  color: var(--white);
+  font-size:32px;
+  font-family: Rubik, sans-serif;
+  vertical-align: middle;
+  display: table-cell;
 }
 
 /* Artist Selection */

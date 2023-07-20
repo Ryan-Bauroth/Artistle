@@ -11,8 +11,10 @@ document.body.appendChild(script);
 const SONG_INPUT = document.getElementById("song-input");
 const SONG_INPUT_BACKGROUND = document.getElementById("song-input-div");
 const ARTIST_INPUT = document.getElementById("artist-input");
-const ARTIST_INPUT_BACKGROUND = document.getElementById("artist-input-background")
-const ARTIST_LOAD_ICON = document.getElementById("artist-loader")
+const ARTIST_INPUT_BACKGROUND = document.getElementById("artist-input-background");
+const ARTIST_LOAD_ICON = document.getElementById("artist-loader");
+const SONG_INPUT_AUTOCOMPLETE = document.getElementById("autocomplete-song-input");
+const COUNTDOWN = document.getElementById("countdown");
 
 
 // Global Variables
@@ -24,11 +26,15 @@ let backupCurrentSongs = [];
 let recentSongs = []
 let currentSongName = ""
 let music = new Audio()
+let countdownTimerInterval;
 
 function playMusic(){
+    //TODO put input in focus
     if(!currentlyPlaying && allowPlayMusic){
+        SONG_INPUT.value = "";
         music.play();
         currentlyPlaying = true;
+        countdownTimerInterval = window.setInterval(countdown, 1000);
         music.addEventListener("ended", function(){
             music.currentTime = 0;
             currentlyPlaying = false;
@@ -74,9 +80,9 @@ function submitArtist(){
             },
             data: {"input": document.getElementById("artist-input").value},
         }).done(function (data) {
-            SONG_INPUT.disabled = false;
             SONG_INPUT_BACKGROUND.style.filter = "blur(0px)";
             ARTIST_LOAD_ICON.style.opacity = "0";
+            SONG_INPUT.disabled = false;
             if (data !== "Artist_has_no_url") {
                 allowPlayMusic = true;
                 currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(",");
@@ -85,6 +91,7 @@ function submitArtist(){
                 //TODO add warning if limit
                 selectSong();
                 allowInput = true;
+                setAutocomplete();
             } else {
                 editArtist();
                 alert("The artist you entered doesn't have preview URLs! Try another artist!");
@@ -97,7 +104,6 @@ function selectSong(){
     if(currentSongs.length > 0){
         let rand = getRandNumber()
         let musicStart = Math.floor(Math.random() * 20)
-        console.log(musicStart)
         music = new Audio(currentSongs[rand].split("|#&")[1] + "#t=" + musicStart.toString() + "," + (musicStart + 10).toString());
         currentSongName = currentSongs[rand].split("|#&")[0].trim();
         recentSongs.push(currentSongs[rand].split("|#&")[0].trim());
@@ -105,7 +111,6 @@ function selectSong(){
         if(backupCurrentSongs.length > 4 &&  recentSongs.length > 3)
             recentSongs.shift();
         console.log(currentSongName);
-        console.log(recentSongs)
     }
     else{
         currentSongs = backupCurrentSongs.slice(0);
@@ -136,10 +141,38 @@ SONG_INPUT.addEventListener("change", (event) => {
         SONG_INPUT.value = ""
         resetMusic();
         selectSong();
+        resetCountdown();
         playMusic();
     }
 });
 
 function cleanInput(string){
     return string.toLowerCase().trim().replace(/'/g,"").replace("?","").replace("!", "").replace(",","").replace(".","").replace(/"/g,"")
+}
+function setAutocomplete(){
+    $(SONG_INPUT_AUTOCOMPLETE).empty();
+    for(let i = 0; i < backupCurrentSongs.length; i++){
+        let option = document.createElement("option");
+        option.value = backupCurrentSongs[i].split("|#&")[0].trim()
+        SONG_INPUT_AUTOCOMPLETE.appendChild(option);
+    }
+}
+
+function countdown(){
+    if(COUNTDOWN.textContent !== "1")
+        COUNTDOWN.textContent = (Number(COUNTDOWN.textContent) - 1).toString();
+    else {
+        COUNTDOWN.textContent = (Number(COUNTDOWN.textContent) - 1).toString();
+        window.clearInterval(countdownTimerInterval)
+        resetMusic();
+        selectSong();
+        resetCountdown();
+        //todo show correct answer
+    }
+}
+function resetCountdown(){
+    if(countdownTimerInterval != null){
+        window.clearInterval(countdownTimerInterval)
+    }
+    COUNTDOWN.textContent = "10";
 }

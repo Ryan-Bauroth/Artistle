@@ -1,9 +1,8 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request
 import spotipy
 import os
 from dotenv import load_dotenv
 import random
-import json
 
 # abstracted variables
 ARTIST_AUTOFILL_NUMBER = 5
@@ -127,11 +126,16 @@ def get_artist_songs(artist_name, blank_space):
 
         artist_check = track['artists'][0]['name']
 
-        if song_name and preview_url and artist_check.lower().strip() == artist_name.lower().strip():
+        if song_name and preview_url and artist_check.lower().strip() == artist_name.lower().strip() and not duplicateSongCheck(song_name, songs_list):
             songs_list.append(f"{song_name}|#&{preview_url} ")
 
     return songs_list
 
+def duplicateSongCheck(song_name, songs_list):
+    for song in songs_list:
+        if song_name in song:
+            return True
+    return False
 
 """
 """
