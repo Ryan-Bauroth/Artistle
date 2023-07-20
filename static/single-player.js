@@ -51,6 +51,7 @@ let artistPhoto = ""
 function playMusic(){
     //TODO put input in focus
     if(!currentlyPlaying && allowPlayMusic){
+        SONG_INPUT.removeAttribute('list');
         SONG_INPUT.value = "";
         music.play();
         if(msTimerInterval != null)
@@ -77,24 +78,26 @@ function resetMusic(){
     Un-blurs and enables input for the user (allows the user to change their artist)
  */
 function editArtist(){
-    PHOTO_CONTAINER.style.display = "none";
-    allowPlayMusic = false;
-    localStorage.setItem(ARTIST_INPUT.value + " high score", highScore);
-    ARTIST_INPUT.value = "";
-    ARTIST_INPUT_BACKGROUND.style.filter = "blur(0px)";
-    ARTIST_INPUT.disabled = false;
-    HIGHSCORE_TEXT.textContent = ""
-    score = 0;
-    highScore = 0;
-    streak = 0;
-    SCORE.textContent = ""
-    COUNTDOWN.textContent = "10";
-    if(countdownTimerInterval != null)
-        window.clearInterval(countdownTimerInterval)
-    if(msTimerInterval != null)
-        window.clearInterval(msTimerInterval)
-    time = 1000;
-    resetMusic();
+    if(allowInput) {
+        PHOTO_CONTAINER.style.display = "none";
+        allowPlayMusic = false;
+        localStorage.setItem(ARTIST_INPUT.value.toLowerCase() + " high score", highScore);
+        ARTIST_INPUT.value = "";
+        ARTIST_INPUT_BACKGROUND.style.filter = "blur(0px)";
+        ARTIST_INPUT.disabled = false;
+        HIGHSCORE_TEXT.textContent = ""
+        score = 0;
+        highScore = 0;
+        streak = 0;
+        SCORE.textContent = ""
+        COUNTDOWN.textContent = "10";
+        if (countdownTimerInterval != null)
+            window.clearInterval(countdownTimerInterval)
+        if (msTimerInterval != null)
+            window.clearInterval(msTimerInterval)
+        time = 1000;
+        resetMusic();
+    }
 }
 
 /*
@@ -117,7 +120,7 @@ function submitArtist(){
             beforeSend: function (xhr) {
                 xhr.overrideMimeType("text/plain")
             },
-            data: {"input": document.getElementById("artist-input").value},
+            data: {"input": ARTIST_INPUT.value},
         }).done(function (data) {
             SONG_INPUT_BACKGROUND.style.filter = "blur(0px)";
             ARTIST_LOAD_ICON.style.opacity = "0";
@@ -129,9 +132,8 @@ function submitArtist(){
                 currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(",");
                 artistPhoto = currentSongs[1];
                 ARTIST_PHOTO.src = artistPhoto;
-                HIGHSCORE_TEXT.textContent = localStorage.getItem(ARTIST_INPUT.value + "high score") != null ? "HIGH SCORE: " + localStorage.getItem(ARTIST_INPUT.value + "high score"): "HIGH SCORE: 0";
-                highScore = localStorage.getItem(ARTIST_INPUT.value + "high score") != null ? localStorage.getItem(ARTIST_INPUT.value + "high score"): 0;
-
+                HIGHSCORE_TEXT.textContent = localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score") != null ? "HIGH SCORE: " + localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score"): "HIGH SCORE: 0";
+                highScore = localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score") != null ? localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score"): 0;
                 if(artistPhoto !== "")
                     PHOTO_CONTAINER.style.display = "block";
                 currentSongs.splice(0, 2);
@@ -195,6 +197,10 @@ SONG_INPUT.addEventListener("change", (event) => {
         SCORE.innerText = Math.round(score).toString();
         streak += 1;
         time = 1000;
+        if(score > highScore){
+            highScore = score;
+            HIGHSCORE_TEXT.textContent = "HIGH SCORE: " + Math.round(score).toString();
+        }
         resetMusic();
         selectSong();
         resetCountdown();
