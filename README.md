@@ -5,7 +5,8 @@
 * [Installation](#Installation)
 * [Spotify Developer](#Spotify_Developer)
 * [Start](#Start)
-
+* [Troubleshooting](#Troubleshooting)
+* [The Team](#The_Team)
 ## Description
 The Swiftle (https://www.techyonic.co/swiftle), one of the most import contributions to humanity since sliced baguettes, is almost perfect. Yet, it is missing one crucial thing: Customization. This is why we embarked on our journey to create Artistle. Artistle allows users to play a fun song guessing game. All you have to do is pick your favorite artist (presumably Taylor Swift)! Artistle will pick a random song and play it. Now it is up to you to guess the name. Watch out though! You only have 10 seconds. Will you be able to meet Artistle's challenge? Or will you be drowned out by the music? That's up to you to find out!
 
@@ -36,3 +37,18 @@ To run this project, run the app.py file
 ```
 $ python app.py
 ```
+
+## Troubleshooting
+TO BE WRITTEN (for now, we're flawless!)
+
+
+## The Team
+Ryan Bauroth: Back-end, Front-end, Fri-end
+
+Cem Akdurak: Back-end, Turkish Delight Supplier, Toast, Presentation
+
+Marcos Ginebra: Design Lead, Presentation, Headphone Experience Tester
+
+Arda Güzel: Front-end, Image Connosieur, Rock(Geology) Enjoyer
+
+This program was made as part of the final project for Tufts Pre-College 2023 Coding Academy
