@@ -144,6 +144,46 @@
   90% {transform: translateX(-100%);}
   100% {opacity: 0}
 }
+#highscore-container{
+  position: absolute;
+  bottom: -65%;
+  right:-10%;
+  transform: translateX(-50%);
+  display: table;
+}
+#highscore{
+  color: var(--lightblue-gray);
+  font-size: 18px;
+  text-align: left;
+  font-family: Rubik, sans-serif;
+  vertical-align: middle;
+  display: table-cell;
+  font-weight: lighter;
+}
+
+#photo-container {
+  height: 300px;
+  width: 300px;
+  border: 8px solid var(--spotify-green);
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  display: none;
+  animation: fadeIn 1s;
+}
+#photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
 
 /* Artist Selection */
 #artist-input-outline{

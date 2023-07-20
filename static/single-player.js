@@ -20,6 +20,9 @@ const RIGHT_ANSWER = document.getElementById("right-answer");
 const RIGHT_DIV = document.getElementById("right-div");
 const WRONG_ANSWER = document.getElementById("wrong-answer");
 const WRONG_DIV = document.getElementById("wrong-div");
+const ARTIST_PHOTO = document.getElementById("photo");
+const PHOTO_CONTAINER = document.getElementById("photo-container")
+const HIGHSCORE_TEXT = document.getElementById("highscore")
 
 
 const orgPoint = 1000;
@@ -43,6 +46,7 @@ let scoreResetAnimationInterval;
 let streak = 0;
 let score = 0;
 let highScore = 0;
+let artistPhoto = ""
 
 function playMusic(){
     //TODO put input in focus
@@ -73,10 +77,13 @@ function resetMusic(){
     Un-blurs and enables input for the user (allows the user to change their artist)
  */
 function editArtist(){
+    PHOTO_CONTAINER.style.display = "none";
     allowPlayMusic = false;
+    localStorage.setItem(ARTIST_INPUT.value + " high score", highScore);
     ARTIST_INPUT.value = "";
     ARTIST_INPUT_BACKGROUND.style.filter = "blur(0px)";
     ARTIST_INPUT.disabled = false;
+    HIGHSCORE_TEXT.textContent = ""
     score = 0;
     highScore = 0;
     streak = 0;
@@ -120,7 +127,14 @@ function submitArtist(){
                 allowPlayMusic = true;
                 data = decodeURIComponent(JSON.parse(data));
                 currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(",");
-                currentSongs.shift();
+                artistPhoto = currentSongs[1];
+                ARTIST_PHOTO.src = artistPhoto;
+                HIGHSCORE_TEXT.textContent = localStorage.getItem(ARTIST_INPUT.value + "high score") != null ? "HIGH SCORE: " + localStorage.getItem(ARTIST_INPUT.value + "high score"): "HIGH SCORE: 0";
+                highScore = localStorage.getItem(ARTIST_INPUT.value + "high score") != null ? localStorage.getItem(ARTIST_INPUT.value + "high score"): 0;
+
+                if(artistPhoto !== "")
+                    PHOTO_CONTAINER.style.display = "block";
+                currentSongs.splice(0, 2);
                 backupCurrentSongs = currentSongs.slice(0);
                 //TODO add warning if limit
                 selectSong();
@@ -175,6 +189,7 @@ SONG_INPUT.addEventListener("change", (event) => {
         RIGHT_ANSWER.textContent = "+" + Math.round(calculateScore(time, streak, score)[0]);
         score = calculateScore(time, streak, score)[1];
         SONG_INPUT.value = ""
+        SONG_INPUT.blur("0px");
         RIGHT_DIV.style.display = "table";
         setTimeout(resetAnswerDivs, animationTime);
         SCORE.innerText = Math.round(score).toString();
@@ -207,6 +222,8 @@ function countdown(){
     if(COUNTDOWN.textContent !== "1")
         COUNTDOWN.textContent = (Number(COUNTDOWN.textContent) - 1).toString();
     else {
+        SONG_INPUT.value = ""
+        SONG_INPUT.blur("0px");
         WRONG_ANSWER.textContent = currentSongName;
         WRONG_DIV.style.display = "table";
         setTimeout(resetAnswerDivs, animationTime + 300)
@@ -217,13 +234,13 @@ function countdown(){
         time = 1000;
         if(score > highScore){
             highScore = score;
+            HIGHSCORE_TEXT.textContent = "HIGH SCORE: " + Math.round(score).toString();
         }
         score = 0;
         streak = 0;
         resetMusic();
         selectSong();
         resetCountdown();
-        //todo show correct answer
     }
 }
 function resetCountdown(){

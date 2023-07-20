@@ -41,7 +41,8 @@ def store_artist_check():
         print(artist_name)
         print(artist_check(artist_name))
         print(get_artist_songs(artist_name, "Limit" if artist_name + "&%!" in check else "No Limit"))
-        return check if check == "Artist_has_no_url" else get_artist_songs(artist_name, "Limit" if artist_name + "&%!" in check else "No Limit"), 202
+        return check if check == "Artist_has_no_url" else get_artist_songs(artist_name,
+                                                                           "Limit" if artist_name + "&%!" in check else "No Limit"), 202
 
 
 """ Method artist_autofill
@@ -111,6 +112,8 @@ def get_artist_songs(artist_name, blank_space):
     elif blank_space == "No Limit":
         songs_list.append("")
 
+    songs_list.append(get_img_link(artist_name))
+
     results = spotifyObject.search(q=artist_name, type='artist')
 
     for item in results['artists']['items']:
@@ -126,16 +129,19 @@ def get_artist_songs(artist_name, blank_space):
 
         artist_check = track['artists'][0]['name']
 
-        if song_name and preview_url and artist_check.lower().strip() == artist_name.lower().strip() and not duplicateSongCheck(song_name, songs_list):
+        if song_name and preview_url and artist_check.lower().strip() == artist_name.lower().strip() and not duplicateSongCheck(
+                song_name, songs_list):
             songs_list.append(f"{song_name}|#&{preview_url} ")
 
     return songs_list
+
 
 def duplicateSongCheck(song_name, songs_list):
     for song in songs_list:
         if song_name == song.split("|"):
             return True
     return False
+
 
 """
 """
@@ -171,8 +177,10 @@ def calculate_score(guess_time, streak,
 
 def get_img_link(artist_name):
     results = spotifyObject.search(q='artist:' + artist_name, type='artist')
-
-    items = results['artists']['items']
-    if len(items) > 0:
-        artist = items[0]
-        return artist['images'][0]['url']
+    try:
+        items = results['artists']['items']
+        if len(items) > 0:
+            artist = items[0]
+            return artist['images'][0]['url']
+    except IndexError:
+        return ""
