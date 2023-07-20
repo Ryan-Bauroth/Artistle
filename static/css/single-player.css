@@ -106,7 +106,7 @@
 }
 #wrong-div{
   position: absolute;
-  bottom: -65%;
+  top: 120%;
   left: 40%;
   width: 60%;
   transform: translateX(-100%);

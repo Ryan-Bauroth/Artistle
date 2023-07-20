@@ -173,7 +173,7 @@ ARTIST_INPUT.addEventListener("keyup", function(event) {
 SONG_INPUT.addEventListener("change", (event) => {
     if(cleanInput(currentSongName) === cleanInput(SONG_INPUT.value) && currentlyPlaying){
         RIGHT_ANSWER.textContent = "+" + Math.round(calculateScore(time, streak, score)[0]);
-        score = calculateScore(time, streak, score)[0];
+        score = calculateScore(time, streak, score)[1];
         SONG_INPUT.value = ""
         RIGHT_DIV.style.display = "table";
         setTimeout(resetAnswerDivs, animationTime);
