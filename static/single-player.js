@@ -16,9 +16,15 @@ const ARTIST_LOAD_ICON = document.getElementById("artist-loader");
 const SONG_INPUT_AUTOCOMPLETE = document.getElementById("autocomplete-song-input");
 const COUNTDOWN = document.getElementById("countdown");
 const SCORE = document.getElementById("score");
+const RIGHT_ANSWER = document.getElementById("right-answer");
+const RIGHT_DIV = document.getElementById("right-div");
+const WRONG_ANSWER = document.getElementById("wrong-answer");
+const WRONG_DIV = document.getElementById("wrong-div");
+
 
 const orgPoint = 1000;
 const streakMultiplier = 1.02;
+const animationTime = 1500;
 
 
 // Global Variables
@@ -33,6 +39,7 @@ let music = new Audio()
 let countdownTimerInterval;
 let time = 0;
 let msTimerInterval;
+let scoreResetAnimationInterval;
 let streak = 0;
 let score = 0;
 let highScore = 0;
@@ -42,6 +49,9 @@ function playMusic(){
     if(!currentlyPlaying && allowPlayMusic){
         SONG_INPUT.value = "";
         music.play();
+        if(msTimerInterval != null)
+            window.clearInterval(msTimerInterval)
+        time = 1000;
         currentlyPlaying = true;
         countdownTimerInterval = window.setInterval(countdown, 1000);
         msTimerInterval = window.setInterval(calcMSTime, 10);
@@ -105,6 +115,7 @@ function submitArtist(){
             SONG_INPUT_BACKGROUND.style.filter = "blur(0px)";
             ARTIST_LOAD_ICON.style.opacity = "0";
             SONG_INPUT.disabled = false;
+            SCORE.innerText = "0"
             if (data !== "Artist_has_no_url") {
                 allowPlayMusic = true;
                 data = decodeURIComponent(JSON.parse(data));
@@ -161,10 +172,12 @@ ARTIST_INPUT.addEventListener("keyup", function(event) {
 /* CHECKS IF CORRECT ANSWER */
 SONG_INPUT.addEventListener("change", (event) => {
     if(cleanInput(currentSongName) === cleanInput(SONG_INPUT.value) && currentlyPlaying){
+        RIGHT_ANSWER.textContent = "+" + Math.round(calculateScore(time, streak, score)[0]);
+        score = calculateScore(time, streak, score)[0];
         SONG_INPUT.value = ""
-        score = calculateScore(time, streak, score);
+        RIGHT_DIV.style.display = "table";
+        setTimeout(resetAnswerDivs, animationTime);
         SCORE.innerText = Math.round(score).toString();
-        console.log(score);
         streak += 1;
         time = 1000;
         resetMusic();
@@ -187,7 +200,6 @@ function setAutocomplete(){
         let option = document.createElement("option");
         option.value = backupCurrentSongs[i].split("|#&")[0].trim()
         SONG_INPUT_AUTOCOMPLETE.appendChild(option);
-        console.log(backupCurrentSongs[i].split("|#&")[0].trim())
     }
 }
 
@@ -195,11 +207,14 @@ function countdown(){
     if(COUNTDOWN.textContent !== "1")
         COUNTDOWN.textContent = (Number(COUNTDOWN.textContent) - 1).toString();
     else {
+        WRONG_ANSWER.textContent = currentSongName;
+        WRONG_DIV.style.display = "table";
+        setTimeout(resetAnswerDivs, animationTime + 300)
+        scoreResetAnimationInterval = window.setInterval(scoreResetAnimation, (score/animationTime));
         COUNTDOWN.textContent = (Number(COUNTDOWN.textContent) - 1).toString();
         window.clearInterval(countdownTimerInterval)
         window.clearInterval(msTimerInterval)
         time = 1000;
-        SCORE.innerText = ""
         if(score > highScore){
             highScore = score;
         }
@@ -219,11 +234,24 @@ function resetCountdown(){
 }
 
 function calculateScore(guessTime, streak, previousScore) {
-    let timePenalty = guessTime / 2;
+    let timePenalty = (1000 - guessTime) / 2;
     let point = (orgPoint - timePenalty) * Math.pow(streakMultiplier, streak);
-    return point + previousScore;
+    return [point, point + previousScore];
 }
 
 function calcMSTime(){
     time -= 1;
+}
+
+function resetAnswerDivs(){
+    WRONG_DIV.style.display = "none";
+    RIGHT_DIV.style.display = "none";
+}
+
+function scoreResetAnimation() {
+    SCORE.innerText = (Math.round(parseInt(SCORE.innerText) - 50 + Math.random())).toString();
+    if (parseInt(SCORE.innerText) <= 0) {
+        window.clearInterval(scoreResetAnimationInterval);
+        SCORE.innerText = "0";
+    }
 }
