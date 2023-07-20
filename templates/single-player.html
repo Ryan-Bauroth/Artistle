@@ -11,11 +11,12 @@
     <h1>Artistle</h1>
   </div>
   <div id="song-input-div">
-    <input type="text" id="song-input" name="song" placeholder=" Guess the Song!" spellcheck="false" list="autocomplete-song-input"/>
+    <div id="countdown-div">
+      <p id="countdown">10</p>
+    </div>
+    <input type="text" id="song-input" name="song" placeholder=" Guess the Song!" spellcheck="false" onkeyup="if(this.value.length>=3)this.setAttribute('list','autocomplete-song-input');" onkeydown="if(this.value.length<3||event.keyCode===8)this.removeAttribute('list');"/>
     <datalist id="autocomplete-song-input"></datalist>
-    <button id="play-button" onclick="playMusic()">
-      <svg xmlns="http://www.w3.org/2000/svg" id="play-icon" viewBox="0 0 384 512"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg>
-    </button>
+    <svg id="play-button" xmlns="http://www.w3.org/2000/svg" onclick="playMusic()" viewBox="0 0 384 512"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg>
   </div>
   <div id="artist-input-outline">
     <div id="artist-input-background">
