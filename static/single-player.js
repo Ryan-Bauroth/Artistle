@@ -63,9 +63,21 @@ function resetMusic(){
     Un-blurs and enables input for the user (allows the user to change their artist)
  */
 function editArtist(){
+    allowPlayMusic = false;
     ARTIST_INPUT.value = "";
     ARTIST_INPUT_BACKGROUND.style.filter = "blur(0px)";
     ARTIST_INPUT.disabled = false;
+    score = 0;
+    highScore = 0;
+    streak = 0;
+    SCORE.textContent = ""
+    COUNTDOWN.textContent = "10";
+    if(countdownTimerInterval != null)
+        window.clearInterval(countdownTimerInterval)
+    if(msTimerInterval != null)
+        window.clearInterval(msTimerInterval)
+    time = 1000;
+    resetMusic();
 }
 
 /*
@@ -95,6 +107,7 @@ function submitArtist(){
             SONG_INPUT.disabled = false;
             if (data !== "Artist_has_no_url") {
                 allowPlayMusic = true;
+                data = decodeURIComponent(JSON.parse(data));
                 currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(",");
                 currentSongs.shift();
                 backupCurrentSongs = currentSongs.slice(0);
@@ -145,15 +158,15 @@ ARTIST_INPUT.addEventListener("keyup", function(event) {
     }
 });
 
+/* CHECKS IF CORRECT ANSWER */
 SONG_INPUT.addEventListener("change", (event) => {
     if(cleanInput(currentSongName) === cleanInput(SONG_INPUT.value) && currentlyPlaying){
-        //TODO streak
         SONG_INPUT.value = ""
         score = calculateScore(time, streak, score);
         SCORE.innerText = Math.round(score).toString();
         console.log(score);
         streak += 1;
-        time = 0;
+        time = 1000;
         resetMusic();
         selectSong();
         resetCountdown();
@@ -166,10 +179,15 @@ function cleanInput(string){
 }
 function setAutocomplete(){
     $(SONG_INPUT_AUTOCOMPLETE).empty();
-    for(let i = 0; i < backupCurrentSongs.length; i++){
+    outerloop: for(let i = 0; i < backupCurrentSongs.length; i++){
+        for(let x = 0; x < SONG_INPUT_AUTOCOMPLETE.children.length; x++){
+            if(backupCurrentSongs[i].split("|#&")[0].trim() === SONG_INPUT_AUTOCOMPLETE.children[x].value)
+                continue outerloop;
+        }
         let option = document.createElement("option");
         option.value = backupCurrentSongs[i].split("|#&")[0].trim()
         SONG_INPUT_AUTOCOMPLETE.appendChild(option);
+        console.log(backupCurrentSongs[i].split("|#&")[0].trim())
     }
 }
 
@@ -180,7 +198,7 @@ function countdown(){
         COUNTDOWN.textContent = (Number(COUNTDOWN.textContent) - 1).toString();
         window.clearInterval(countdownTimerInterval)
         window.clearInterval(msTimerInterval)
-        time = 0;
+        time = 1000;
         SCORE.innerText = ""
         if(score > highScore){
             highScore = score;
@@ -207,5 +225,5 @@ function calculateScore(guessTime, streak, previousScore) {
 }
 
 function calcMSTime(){
-    time += 1;
+    time -= 1;
 }
