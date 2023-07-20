@@ -133,7 +133,7 @@ def get_artist_songs(artist_name, blank_space):
 
 def duplicateSongCheck(song_name, songs_list):
     for song in songs_list:
-        if song_name in song:
+        if song_name == song.split("|"):
             return True
     return False
 
