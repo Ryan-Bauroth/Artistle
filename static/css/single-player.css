@@ -8,6 +8,7 @@
   --spotify-green: rgb(70, 244, 102);
   --black: rgb(0,0,0);
   --white: rgb(255,255,255);
+  --pastel-pink: #ed719e;
 }
 
 /* Background */
@@ -37,7 +38,7 @@
 }
 #song-input{
   height: 38px;
-  width: 91%;
+  width: 84%;
   border-radius: 10px;
   background-color: var(--secondary-bg-color);
   outline: none;
@@ -45,31 +46,142 @@
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  left: 46.5%;
+  left: 50%;
   color: white;
   font-size:22px;
   text-align: center;
   font-family: Rubik, sans-serif;
 }
 #play-button{
-  border-radius: 50%;
+  fill: var(--pastel-pink);
   width: 38px;
   height: 38px;
-  outline: 2px solid var(--black);
-  border: none;
   position: absolute;
+  top: 50%;
   right: 6px;
-  top: 50%;
   transform: translateY(-50%);
-  background-color: var(--blue-gray);
 }
-#play-icon{
-  fill:var(--spotify-green);
-  height: 20px;
+#countdown-div{
+  width: 38px;
+  height: 38px;
   position: absolute;
   top: 50%;
-  left: 53%;
+  left: 7px;
+  transform: translateY(-50%);
+  display: table;
+}
+#countdown{
+  text-align: center;
+  color: var(--white);
+  font-size:32px;
+  font-family: Rubik, sans-serif;
+  vertical-align: middle;
+  display: table-cell;
+}
+#score-container{
+  position: absolute;
+  bottom: -65%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: table;
+}
+#score{
+  text-align: center;
+  color: var(--white);
+  font-size: 18px;
+  font-family: Rubik, sans-serif;
+  vertical-align: middle;
+  display: table-cell;
+  font-weight: lighter;
+}
+#wrong-answer{
+  color: var(--pastel-pink);
+  font-size: 18px;
+  text-align: right;
+  font-family: Rubik, sans-serif;
+  vertical-align: middle;
+  display: table-cell;
+  font-weight: lighter;
+}
+#wrong-div{
+  position: absolute;
+  top: 120%;
+  left: 40%;
+  width: 60%;
+  transform: translateX(-100%);
+  display: none;
+  animation-name: wronganswer;
+  animation-duration: 2s;
+  opacity: 1;
+}
+@keyframes wronganswer {
+  0% {transform: translateX(-100%);}
+  95% {transform: translateX(-75%);}
+  100% {opacity: 0}
+}
+#right-answer{
+  color: var(--spotify-green);
+  font-size: 18px;
+  text-align: right;
+  font-family: Rubik, sans-serif;
+  vertical-align: middle;
+  display: table-cell;
+  font-weight: lighter;
+}
+#right-div{
+  position: absolute;
+  bottom: -65%;
+  left: 53.5%;
+  transform: translateX(100%);
+  display: none;
+  animation-name: rightanswer;
+  animation-duration: 1.5s;
+  opacity: 1;
+}
+@keyframes rightanswer {
+  0% {transform: translateX(100%);}
+  90% {transform: translateX(-100%);}
+  100% {opacity: 0}
+}
+#highscore-container{
+  position: absolute;
+  bottom: -65%;
+  right:-10%;
+  transform: translateX(-50%);
+  display: table;
+}
+#highscore{
+  color: var(--lightblue-gray);
+  font-size: 18px;
+  text-align: left;
+  font-family: Rubik, sans-serif;
+  vertical-align: middle;
+  display: table-cell;
+  font-weight: lighter;
+}
+
+#photo-container {
+  height: 300px;
+  width: 300px;
+  border: 8px solid var(--spotify-green);
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  left: 50%;
+  top: 55%;
   transform: translate(-50%, -50%);
+  display: none;
+  animation: fadeIn 1s;
+}
+#photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 /* Artist Selection */
