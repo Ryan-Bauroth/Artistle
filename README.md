@@ -1,4 +1,4 @@
-# Artistle
+# Artistle 
 
 ## Table of contents
 * [Description](#Description)
@@ -11,7 +11,8 @@ The Swiftle (https://www.techyonic.co/swiftle), one of the most import contribut
 
 ## Installation
 This project is created with:
-* Python 3.11
+* Python 3.9
+* Use DEV branch
 
 Dependancies:
 ```
