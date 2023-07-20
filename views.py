@@ -17,7 +17,7 @@ redirect_uri = os.getenv('REDIRECT_URI')
 oauth_object = spotipy.SpotifyOAuth(clientID, clientSecret, redirect_uri, scope="user-modify-playback-state")
 token_dict = oauth_object.get_access_token()
 token = token_dict['access_token']
-spotifyObject = spotipy.Spotify(auth=token)
+spotifyObject = spotipy.Spotify(auth=TOKEN)
 user_name = spotifyObject.current_user()
 
 views = Blueprint(__name__, "views")
