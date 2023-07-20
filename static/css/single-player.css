@@ -95,6 +95,55 @@
   display: table-cell;
   font-weight: lighter;
 }
+#wrong-answer{
+  color: var(--pastel-pink);
+  font-size: 18px;
+  text-align: right;
+  font-family: Rubik, sans-serif;
+  vertical-align: middle;
+  display: table-cell;
+  font-weight: lighter;
+}
+#wrong-div{
+  position: absolute;
+  top: 120%;
+  left: 40%;
+  width: 60%;
+  transform: translateX(-100%);
+  display: none;
+  animation-name: wronganswer;
+  animation-duration: 2s;
+  opacity: 1;
+}
+@keyframes wronganswer {
+  0% {transform: translateX(-100%);}
+  95% {transform: translateX(-75%);}
+  100% {opacity: 0}
+}
+#right-answer{
+  color: var(--spotify-green);
+  font-size: 18px;
+  text-align: right;
+  font-family: Rubik, sans-serif;
+  vertical-align: middle;
+  display: table-cell;
+  font-weight: lighter;
+}
+#right-div{
+  position: absolute;
+  bottom: -65%;
+  left: 53.5%;
+  transform: translateX(100%);
+  display: none;
+  animation-name: rightanswer;
+  animation-duration: 1.5s;
+  opacity: 1;
+}
+@keyframes rightanswer {
+  0% {transform: translateX(100%);}
+  90% {transform: translateX(-100%);}
+  100% {opacity: 0}
+}
 
 /* Artist Selection */
 #artist-input-outline{
