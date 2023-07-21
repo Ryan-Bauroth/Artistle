@@ -43,3 +43,9 @@ $ python app.py
 - Make it playable on mobile
 - Create a fully functioning home page
 - Advertise
+
+## Contributors
+- Ryfi
+- CemAkdurak
+- Arda Güzel
+- 24ginemar1
