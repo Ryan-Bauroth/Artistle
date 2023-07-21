@@ -102,6 +102,38 @@ function editArtist(){
     }
 }
 
+ARTIST_INPUT.onfocusout = function(){
+    if(allowInput){
+        if(ARTIST_INPUT.value !== "")
+        submitArtist();
+    }
+};
+
+function disableUserInput(){
+    allowInput = false;
+    ARTIST_INPUT_BACKGROUND.style.filter = "blur(1px)";
+    ARTIST_INPUT.disabled = true;
+    SONG_INPUT.disabled = true;
+    SONG_INPUT_BACKGROUND.style.filter = "blur(1px)";
+}
+function enableUserInput(){
+    allowInput = true;
+    ARTIST_INPUT_BACKGROUND.style.filter = "blur(0px)";
+    ARTIST_INPUT.disabled = false;
+    SONG_INPUT.disabled = false;
+    SONG_INPUT_BACKGROUND.style.filter = "blur(0px)";
+}
+
+function retrieveLocalHighscores(){
+    HIGHSCORE_TEXT.textContent = localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score") != null ? "HIGH SCORE: " + Math.round(localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score")): "HIGH SCORE: 0";
+    highScore = localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score") != null ? localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score"): 0;
+}
+function setHighScore(){
+    highScore = score;
+    localStorage.setItem(ARTIST_INPUT.value.toLowerCase() + " high score", highScore);
+    HIGHSCORE_TEXT.textContent = "HIGH SCORE: " + Math.round(score).toString();
+}
+
 /*
     function submitArtist()
     Called upon when the user submits an artist
@@ -110,12 +142,8 @@ function editArtist(){
 function submitArtist(){
     if(allowInput) {
         allowPlayMusic = false;
-        allowInput = false;
-        ARTIST_INPUT_BACKGROUND.style.filter = "blur(1px)";
-        ARTIST_INPUT.disabled = true;
-        SONG_INPUT.disabled = true;
-        SONG_INPUT_BACKGROUND.style.filter = "blur(1px)";
         ARTIST_LOAD_ICON.style.opacity = "1";
+        disableUserInput();
         $.ajax({
             type: "POST",
             url: "/views/store_artist_check",
@@ -124,32 +152,27 @@ function submitArtist(){
             },
             data: {"input": ARTIST_INPUT.value},
         }).done(function (data) {
-            SONG_INPUT_BACKGROUND.style.filter = "blur(0px)";
             ARTIST_LOAD_ICON.style.opacity = "0";
-            SONG_INPUT.disabled = false;
             SCORE.innerText = "0"
+            enableUserInput();
             if (data !== "Artist_has_no_url") {
                 allowPlayMusic = true;
-                data = decodeURIComponent(JSON.parse(data));
-                currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(",");
+                data = decodeURIComponent(JSON.parse(data)); //allows for special unicode characters
+                currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(","); //creates array based on data
                 if(currentSongs[0] === "Limited Selection"){
                     ARTIST_WARNING.style.display = "block";
                 }
                 artistPhoto = currentSongs[1];
                 ARTIST_PHOTO.src = artistPhoto;
-                HIGHSCORE_TEXT.textContent = localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score") != null ? "HIGH SCORE: " + Math.round(localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score")): "HIGH SCORE: 0";
-                highScore = localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score") != null ? localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score"): 0;
                 if(artistPhoto !== "")
                     PHOTO_CONTAINER.style.display = "block";
-                currentSongs.splice(0, 2);
+                retrieveLocalHighscores();
+                currentSongs.splice(0, 2); //removes the artist url and "artist_has_no_url" from the array
                 backupCurrentSongs = currentSongs.slice(0);
                 selectSong();
-                allowInput = true;
                 setAutocomplete();
             } else {
-                editArtist();
                 alert("The artist you entered doesn't have preview URLs! Try another artist!");
-                allowInput = true;
             }
         })
     }
@@ -189,29 +212,39 @@ ARTIST_INPUT.addEventListener("keyup", function(event) {
     }
 });
 
+function resetSongInput(){
+    SONG_INPUT.value = ""
+    SONG_INPUT.blur("0px");
+}
+function pointsAnimation(){
+    RIGHT_ANSWER.textContent = "+" + Math.round(calculateScore(time, streak, score)[0]);
+    RIGHT_DIV.style.display = "table";
+}
+function incorrectAnswerAnimation(){
+    WRONG_ANSWER.textContent = currentSongName;
+    WRONG_DIV.style.display = "table";
+    scoreResetAnimationInterval = window.setInterval(scoreResetAnimation, (score/animationTime));
+}
+
 /* CHECKS IF CORRECT ANSWER */
-SONG_INPUT.addEventListener("change", (event) => {
+function onSongInput(){
     if(cleanInput(currentSongName) === cleanInput(SONG_INPUT.value) && currentlyPlaying){
-        RIGHT_ANSWER.textContent = "+" + Math.round(calculateScore(time, streak, score)[0]);
+        resetSongInput();
+        pointsAnimation();
         score = calculateScore(time, streak, score)[1];
-        SONG_INPUT.value = ""
-        SONG_INPUT.blur("0px");
-        RIGHT_DIV.style.display = "table";
         setTimeout(resetAnswerDivs, animationTime);
         SCORE.innerText = Math.round(score).toString();
         streak += 1;
         time = 1000;
         if(score > highScore){
-            highScore = score;
-            localStorage.setItem(ARTIST_INPUT.value.toLowerCase() + " high score", highScore);
-            HIGHSCORE_TEXT.textContent = "HIGH SCORE: " + Math.round(score).toString();
+            setHighScore();
         }
         resetMusic();
         selectSong();
         resetCountdown();
         playMusic();
     }
-});
+}
 
 function cleanInput(string){
     return string.toLowerCase().trim().replace(/'/g,"").replace("?","").replace("!", "").replace(",","").replace(".","").replace(/"/g,"")
@@ -233,20 +266,15 @@ function countdown(){
     if(COUNTDOWN.textContent !== "1")
         COUNTDOWN.textContent = (Number(COUNTDOWN.textContent) - 1).toString();
     else {
-        SONG_INPUT.value = ""
-        SONG_INPUT.blur("0px");
-        WRONG_ANSWER.textContent = currentSongName;
-        WRONG_DIV.style.display = "table";
+        resetSongInput();
+        incorrectAnswerAnimation();
         setTimeout(resetAnswerDivs, animationTime + 300)
-        scoreResetAnimationInterval = window.setInterval(scoreResetAnimation, (score/animationTime));
         COUNTDOWN.textContent = (Number(COUNTDOWN.textContent) - 1).toString();
         window.clearInterval(countdownTimerInterval)
         window.clearInterval(msTimerInterval)
         time = 1000;
         if(score > highScore){
-            highScore = score;
-            localStorage.setItem(ARTIST_INPUT.value.toLowerCase() + " high score", highScore);
-            HIGHSCORE_TEXT.textContent = "HIGH SCORE: " + Math.round(score).toString();
+            setHighScore();
         }
         score = 0;
         streak = 0;

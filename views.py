@@ -41,8 +41,7 @@ def store_artist_check():
         print(artist_name)
         print(artist_check(artist_name))
         print(get_artist_songs(artist_name, "Limit" if artist_name + "&%!" in check else "No Limit"))
-        return check if check == "Artist_has_no_url" else get_artist_songs(artist_name,
-                                                                           "Limit" if artist_name + "&%!" in check else "No Limit"), 202
+        return check if check == "Artist_has_no_url" else get_artist_songs(artist_name, "Limit" if artist_name + "&%!" in check else "No Limit"), 202
 
 
 """ Method artist_autofill
@@ -151,7 +150,7 @@ def artist_check(artist_name):
     if len(get_artist_songs(artist_name, "")) >= 10:
         return artist_name  # if artist has more than 10 playable songs, returns artist
 
-    elif 10 > len(get_artist_songs(artist_name, "")) > 0:
+    elif 10 > len(get_artist_songs(artist_name, "")) > 2:
         return artist_name + "&%!", len(get_artist_songs(artist_name, ""))  # if artist has between 1 and 10 playable
         # songs, returns a different code that will allow a pop up disclaimer warning the player about the small song
         # amount. Returns length of song list.

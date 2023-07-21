@@ -199,65 +199,24 @@
 }
 #artist-input-background{
   height: 28px;
-  width: 79%;
+  width: 98%;
   border-radius: 10px;
   background-color: var(--secondary-bg-color);
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  left: 40.3%;
+  left: 50%;
 }
 #artist-input{
   background: none;
   outline: none;
   border: none;
-  width: 90%;
+  width: 100%;
   height: 100%;
   text-align: center;
   color: white;
   font-size: 17px;
   font-family: Rubik, sans-serif;
-}
-#submit-button{
-  border-radius: 10px;
-  width: 18%;
-  height: 28px;
-  border: none;
-  position: absolute;
-  right: 4px;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: var(--secondary-bg-color);
-  color: var(--lightblue-gray);
-  font-size: 17px;
-  font-family: Rubik, sans-serif;
-  font-weight: 600;
-}
-#vl{
-  height: 24px;
-  width: 2.5px;
-  border-radius: 99px;
-  background-color: var(--black);
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  left: 72.5%;
-}
-#edit-div{
-  height: 28px;
-  width: 31px;
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  left: 76.5%;
-}
-#edit-icon{
-  fill:var(--white);
-  height: 18px;
-  position: absolute;
-  top: 50%;
-  left: 45%;
-  transform: translate(-50%, -50%);
 }
 #artist-loader {
   border: 4px solid var(--lightblue-gray); /* Light grey */
@@ -279,9 +238,8 @@
 #warning-icon{
   fill: var(--pastel-pink);
   position: absolute;
-  right: -10%;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  width: 50px;
   display: none;
 }
