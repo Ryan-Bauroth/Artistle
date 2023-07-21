@@ -23,6 +23,7 @@ const WRONG_DIV = document.getElementById("wrong-div");
 const ARTIST_PHOTO = document.getElementById("photo");
 const PHOTO_CONTAINER = document.getElementById("photo-container")
 const HIGHSCORE_TEXT = document.getElementById("highscore")
+const ARTIST_WARNING = document.getElementById("warning-icon")
 
 
 const orgPoint = 1000;
@@ -49,7 +50,6 @@ let highScore = 0;
 let artistPhoto = ""
 
 function playMusic(){
-    //TODO put input in focus
     if(!currentlyPlaying && allowPlayMusic){
         SONG_INPUT.removeAttribute('list');
         SONG_INPUT.value = "";
@@ -70,6 +70,7 @@ function resetMusic(){
     music.pause()
     music.currentTime = 0;
     currentlyPlaying = false;
+    music = new Audio()
 }
 
 /*
@@ -79,6 +80,7 @@ function resetMusic(){
  */
 function editArtist(){
     if(allowInput) {
+        ARTIST_WARNING.style.display = "none";
         PHOTO_CONTAINER.style.display = "none";
         allowPlayMusic = false;
         localStorage.setItem(ARTIST_INPUT.value.toLowerCase() + " high score", highScore);
@@ -130,15 +132,17 @@ function submitArtist(){
                 allowPlayMusic = true;
                 data = decodeURIComponent(JSON.parse(data));
                 currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(",");
+                if(currentSongs[0] === "Limited Selection"){
+                    ARTIST_WARNING.style.display = "block";
+                }
                 artistPhoto = currentSongs[1];
                 ARTIST_PHOTO.src = artistPhoto;
-                HIGHSCORE_TEXT.textContent = localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score") != null ? "HIGH SCORE: " + localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score"): "HIGH SCORE: 0";
+                HIGHSCORE_TEXT.textContent = localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score") != null ? "HIGH SCORE: " + Math.round(localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score")): "HIGH SCORE: 0";
                 highScore = localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score") != null ? localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score"): 0;
                 if(artistPhoto !== "")
                     PHOTO_CONTAINER.style.display = "block";
                 currentSongs.splice(0, 2);
                 backupCurrentSongs = currentSongs.slice(0);
-                //TODO add warning if limit
                 selectSong();
                 allowInput = true;
                 setAutocomplete();
@@ -199,6 +203,7 @@ SONG_INPUT.addEventListener("change", (event) => {
         time = 1000;
         if(score > highScore){
             highScore = score;
+            localStorage.setItem(ARTIST_INPUT.value.toLowerCase() + " high score", highScore);
             HIGHSCORE_TEXT.textContent = "HIGH SCORE: " + Math.round(score).toString();
         }
         resetMusic();
@@ -240,6 +245,7 @@ function countdown(){
         time = 1000;
         if(score > highScore){
             highScore = score;
+            localStorage.setItem(ARTIST_INPUT.value.toLowerCase() + " high score", highScore);
             HIGHSCORE_TEXT.textContent = "HIGH SCORE: " + Math.round(score).toString();
         }
         score = 0;
@@ -273,7 +279,7 @@ function resetAnswerDivs(){
 
 function scoreResetAnimation() {
     SCORE.innerText = (Math.round(parseInt(SCORE.innerText) - 50 + Math.random())).toString();
-    if (parseInt(SCORE.innerText) <= 0) {
+    if (parseInt(SCORE.innerText) <= 0 || !currentlyPlaying) {
         window.clearInterval(scoreResetAnimationInterval);
         SCORE.innerText = "0";
     }

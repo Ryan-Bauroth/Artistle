@@ -276,3 +276,12 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+#warning-icon{
+  fill: var(--pastel-pink);
+  position: absolute;
+  right: -10%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  display: none;
+}
