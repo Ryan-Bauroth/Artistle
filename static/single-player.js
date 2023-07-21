@@ -23,6 +23,7 @@ const WRONG_DIV = document.getElementById("wrong-div");
 const ARTIST_PHOTO = document.getElementById("photo");
 const PHOTO_CONTAINER = document.getElementById("photo-container")
 const HIGHSCORE_TEXT = document.getElementById("highscore")
+const ARTIST_WARNING = document.getElementById("warning-icon")
 
 
 const orgPoint = 1000;
@@ -79,6 +80,7 @@ function resetMusic(){
  */
 function editArtist(){
     if(allowInput) {
+        ARTIST_WARNING.style.display = "none";
         PHOTO_CONTAINER.style.display = "none";
         allowPlayMusic = false;
         localStorage.setItem(ARTIST_INPUT.value.toLowerCase() + " high score", highScore);
@@ -130,6 +132,9 @@ function submitArtist(){
                 allowPlayMusic = true;
                 data = decodeURIComponent(JSON.parse(data));
                 currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(",");
+                if(currentSongs[0] === "Limited Selection"){
+                    ARTIST_WARNING.style.display = "block";
+                }
                 artistPhoto = currentSongs[1];
                 ARTIST_PHOTO.src = artistPhoto;
                 HIGHSCORE_TEXT.textContent = localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score") != null ? "HIGH SCORE: " + localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score"): "HIGH SCORE: 0";
