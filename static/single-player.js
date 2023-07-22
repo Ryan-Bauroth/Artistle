@@ -53,7 +53,9 @@ function playMusic(){
     if(!currentlyPlaying && allowPlayMusic){
         SONG_INPUT.removeAttribute('list');
         SONG_INPUT.value = "";
-        music.play();
+        if(music != null){
+            music.play();
+        }
         if(msTimerInterval != null)
             window.clearInterval(msTimerInterval)
         time = 1000;
@@ -152,9 +154,6 @@ function submitArtist(){
             },
             data: {"input": ARTIST_INPUT.value},
         }).done(function (data) {
-            ARTIST_LOAD_ICON.style.opacity = "0";
-            SCORE.innerText = "0"
-            enableUserInput();
             if (data !== "Artist_has_no_url") {
                 allowPlayMusic = true;
                 data = decodeURIComponent(JSON.parse(data)); //allows for special unicode characters
@@ -174,6 +173,10 @@ function submitArtist(){
             } else {
                 alert("The artist you entered doesn't have preview URLs! Try another artist!");
             }
+            ARTIST_INPUT.blur("0px");
+            ARTIST_LOAD_ICON.style.opacity = "0";
+            SCORE.innerText = "0"
+            enableUserInput();
         })
     }
 }
@@ -185,9 +188,8 @@ function selectSong(){
         currentSongName = currentSongs[rand].split("|#&")[0].trim();
         recentSongs.push(currentSongs[rand].split("|#&")[0].trim());
         currentSongs.splice(rand,1);
-        if(backupCurrentSongs.length > 4 &&  recentSongs.length > 3)
+        if(backupCurrentSongs.length > 6 &&  recentSongs.length > 5)
             recentSongs.shift();
-        console.log(currentSongName);
     }
     else{
         currentSongs = backupCurrentSongs.slice(0);
@@ -215,6 +217,7 @@ ARTIST_INPUT.addEventListener("keyup", function(event) {
 function resetSongInput(){
     SONG_INPUT.value = ""
     SONG_INPUT.blur("0px");
+    SONG_INPUT.focus();
 }
 function pointsAnimation(){
     RIGHT_ANSWER.textContent = "+" + Math.round(calculateScore(time, streak, score)[0]);
@@ -227,8 +230,11 @@ function incorrectAnswerAnimation(){
 }
 
 /* CHECKS IF CORRECT ANSWER */
-function onSongInput(){
-    if(cleanInput(currentSongName) === cleanInput(SONG_INPUT.value) && currentlyPlaying){
+function onSongInput(input){
+    if(input === ""){
+        input = SONG_INPUT.value
+    }
+    if(cleanInput(currentSongName) === cleanInput(input) && currentlyPlaying){
         resetSongInput();
         pointsAnimation();
         score = calculateScore(time, streak, score)[1];
@@ -245,6 +251,31 @@ function onSongInput(){
         playMusic();
     }
 }
+
+SONG_INPUT.addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+        if(SONG_INPUT.value.trim() !== '') {
+            for(let i = 0; i < SONG_INPUT_AUTOCOMPLETE.children.length; i++){
+                if(SONG_INPUT_AUTOCOMPLETE.children[i].value.toLowerCase().startsWith(SONG_INPUT.value.toLowerCase())){
+                    onSongInput(SONG_INPUT_AUTOCOMPLETE.children[i].value);
+                    SONG_INPUT.focus();
+                    return;
+                }
+            }
+            for(let i = 0; i < SONG_INPUT_AUTOCOMPLETE.children.length; i++){
+                if(SONG_INPUT_AUTOCOMPLETE.children[i].value.toLowerCase().includes(SONG_INPUT.value.toLowerCase())){
+                    onSongInput(SONG_INPUT_AUTOCOMPLETE.children[i].value);
+                    SONG_INPUT.focus();
+                    return;
+                }
+            }
+        }
+        else{
+            playMusic();
+            SONG_INPUT.focus();
+        }
+    }
+});
 
 function cleanInput(string){
     return string.toLowerCase().trim().replace(/'/g,"").replace("?","").replace("!", "").replace(",","").replace(".","").replace(/"/g,"")
@@ -273,6 +304,7 @@ function countdown(){
         window.clearInterval(countdownTimerInterval)
         window.clearInterval(msTimerInterval)
         time = 1000;
+        currentlyPlaying = false;
         if(score > highScore){
             setHighScore();
         }
@@ -307,7 +339,7 @@ function resetAnswerDivs(){
 
 function scoreResetAnimation() {
     SCORE.innerText = (Math.round(parseInt(SCORE.innerText) - 50 + Math.random())).toString();
-    if (parseInt(SCORE.innerText) <= 0 || !currentlyPlaying) {
+    if (parseInt(SCORE.innerText) <= 0 || currentlyPlaying) {
         window.clearInterval(scoreResetAnimationInterval);
         SCORE.innerText = "0";
     }
