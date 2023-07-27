@@ -54,25 +54,26 @@ function playMusic(){
         SONG_INPUT.removeAttribute('list');
         SONG_INPUT.value = "";
         if(music != null){
-            music.play();
+            currentlyPlaying = true;
+            music.play().then(function() {
+                if (msTimerInterval != null)
+                    window.clearInterval(msTimerInterval);
+                time = 1000;
+                countdownTimerInterval = window.setInterval(countdown, 1000);
+                msTimerInterval = window.setInterval(calcMSTime, 10);
+                music.addEventListener("ended", function(){
+                    music.currentTime = 0;
+                    currentlyPlaying = false;
+                });
+            })
         }
-        if(msTimerInterval != null)
-            window.clearInterval(msTimerInterval)
-        time = 1000;
-        currentlyPlaying = true;
-        countdownTimerInterval = window.setInterval(countdown, 1000);
-        msTimerInterval = window.setInterval(calcMSTime, 10);
-        music.addEventListener("ended", function(){
-            music.currentTime = 0;
-            currentlyPlaying = false;
-        });
     }
 }
 function resetMusic(){
-    music.pause()
+    music = new Audio()
     music.currentTime = 0;
     currentlyPlaying = false;
-    music = new Audio()
+    music.pause()
 }
 
 /*
@@ -230,11 +231,17 @@ function incorrectAnswerAnimation(){
 }
 
 /* CHECKS IF CORRECT ANSWER */
-function onSongInput(input){
-    if(input === ""){
+function onSongInput(input) {
+    console.log("edit")
+    console.log(SONG_INPUT.value)
+    if (input === "") {
         input = SONG_INPUT.value
     }
-    if(cleanInput(currentSongName) === cleanInput(input) && currentlyPlaying){
+    if (SONG_INPUT.value === "") {
+        SONG_INPUT.blur("0px")
+        SONG_INPUT.focus()
+    }
+    if (cleanInput(currentSongName) === cleanInput(input) && currentlyPlaying) {
         resetSongInput();
         pointsAnimation();
         score = calculateScore(time, streak, score)[1];
@@ -242,15 +249,15 @@ function onSongInput(input){
         SCORE.innerText = Math.round(score).toString();
         streak += 1;
         time = 1000;
-        if(score > highScore){
+        if (score > highScore) {
             setHighScore();
         }
-        resetMusic();
         selectSong();
         resetCountdown();
-        playMusic();
+        resetMusic();
     }
 }
+
 
 SONG_INPUT.addEventListener("keyup", function(event) {
     if (event.key === "Enter") {
@@ -278,7 +285,14 @@ SONG_INPUT.addEventListener("keyup", function(event) {
 });
 
 function cleanInput(string){
-    return string.toLowerCase().trim().replace(/'/g,"").replace("?","").replace("!", "").replace(",","").replace(".","").replace(/"/g,"")
+    if(!string.startsWith("(") && !string.startsWith("-")){
+        string = string.substring(0, string.indexOf("(") !== -1 ? string.indexOf("("): string.indexOf("-") !== -1 ? string.indexOf("-"): string.length)
+    }
+    let replace = ["?","!",",",".","_","(",")","-","[","]","{","}"]
+    for(let i = 0; i < replace.length; i++){
+        string = string.replace(i, "")
+    }
+    return string.toLowerCase().replace(/'/g,"").replace(/"/g,"").trim()
 }
 function setAutocomplete(){
     $(SONG_INPUT_AUTOCOMPLETE).empty();

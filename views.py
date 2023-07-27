@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request
+from urllib.parse import urlencode
+from flask import Blueprint, render_template, request, make_response, redirect, url_for
 import spotipy
 import os
 from dotenv import load_dotenv
@@ -9,12 +10,13 @@ artist_check_num = -2
 
 load_dotenv()
 
+scope = "user-library-read, user-read-recently-played, playlist-read-private"
 clientID = os.getenv('CLIENT_ID')
 clientSecret = os.getenv('CLIENT_SECRET')
 redirect_uri = os.getenv('REDIRECT_URI')
 
 oauth_object = spotipy.SpotifyOAuth(clientID, clientSecret, redirect_uri)
-token_dict = oauth_object.get_access_token()
+token_dict = oauth_object.get_cached_token()
 token = token_dict['access_token']
 spotifyObject = spotipy.Spotify(auth=token)
 user_name = spotifyObject.current_user()
@@ -37,11 +39,26 @@ def store_artist_check():
     if request.method == 'POST':
         user_input = request.form['input']
         check = artist_check(user_input)
-        print(user_input)
-        print(artist_check(user_input))
+        # print(user_input)
+        # print(artist_check(user_input))
         print(get_artist_songs(user_input, "Limit" if user_input + "&%!" in check else "No Limit"))
         return check if check == "Artist_has_no_url" else get_artist_songs(user_input,
                                                                            "Limit" if user_input + "&%!" in check else "No Limit"), 202
+
+
+@views.route("/callback")
+def callback():
+    code = request.args['code']
+    return redirect(url_for('views.single_player'))
+
+
+@views.route("/authorize_user")
+def authorize_user():
+    authorize_url = 'https://accounts.spotify.com/en/authorize?'
+    params = {'response_type': 'code', 'client_id': clientID,
+              'redirect_uri': redirect_uri, 'scope': scope, }
+    query_params = urlencode(params)
+    return make_response(redirect(authorize_url + query_params))
 
 
 def get_artist_songs(artist_name, blank_space):
@@ -61,7 +78,7 @@ def get_artist_songs(artist_name, blank_space):
         if len(artist_list) > 0:
             break
 
-    results = spotifyObject.search(q="artist:" + artist_list[0], type='track', limit=50)
+    results = spotifyObject.search(q="artist:" + artist_list[0], type='track', limit=50, market="US")
 
     for track in results['tracks']['items']:
         song_name = track['name'].replace(",", "")
@@ -110,3 +127,19 @@ def get_img_link(artist_name):
             return artist['images'][0]['url']
     except IndexError:
         return ""
+
+
+def getToken(code, client_id, client_secret, redirect_uri):
+    body = {
+        "grant_type": 'authorization_code',
+        "code": code,
+        "redirect_uri": redirect_uri,
+        "client_id": client_id,
+        "client_secret": client_secret
+    }
+
+    encoded = base64.b64encode("{}:{}".format(client_id, client_secret))
+    headers = {"Content-Type": HEADER, "Authorization": "Basic {}".format(encoded)}
+
+    post = requests.post(SPOTIFY_URL_TOKEN, params=body, headers=headers)
+    return handleToken(json.loads(post.text))
