@@ -1,8 +1,11 @@
+import base64
+import json
 from urllib.parse import urlencode
 from flask import Blueprint, render_template, request, make_response, redirect, url_for
 import spotipy
 import os
 from dotenv import load_dotenv
+import requests
 
 # abstracted variables
 ARTIST_AUTOFILL_NUMBER = 5
@@ -10,7 +13,7 @@ artist_check_num = -2
 
 load_dotenv()
 
-scope = "user-library-read, user-read-recently-played, playlist-read-private"
+scope = "user-library-read"
 clientID = os.getenv('CLIENT_ID')
 clientSecret = os.getenv('CLIENT_SECRET')
 redirect_uri = os.getenv('REDIRECT_URI')
@@ -18,10 +21,11 @@ redirect_uri = os.getenv('REDIRECT_URI')
 oauth_object = spotipy.SpotifyOAuth(clientID, clientSecret, redirect_uri)
 token_dict = oauth_object.get_cached_token()
 token = token_dict['access_token']
+refresh_token = token_dict['refresh_token']
 spotifyObject = spotipy.Spotify(auth=token)
 user_name = spotifyObject.current_user()
 
-views = Blueprint(__name__, "views")
+views = Blueprint(__name__, "app")
 
 
 @views.route("/")
@@ -38,18 +42,66 @@ def single_player():
 def store_artist_check():
     if request.method == 'POST':
         user_input = request.form['input']
-        check = artist_check(user_input)
         # print(user_input)
         # print(artist_check(user_input))
-        print(get_artist_songs(user_input, "Limit" if user_input + "&%!" in check else "No Limit"))
-        return check if check == "Artist_has_no_url" else get_artist_songs(user_input,
-                                                                           "Limit" if user_input + "&%!" in check else "No Limit"), 202
+        # print(get_artist_songs(user_input, "Limit" if user_input + "&%!" in check else "No Limit", spotifyObject))
+        song_list = get_artist_songs(user_input, spotifyObject)
+        song_list.insert(0, "Limited Selection" if len(
+            song_list) < 10 else "")
+        return "Artist_has_no_url" if len(song_list) < 1 else json.dumps(song_list), 202
+
+
+@views.route("/store_artist_check_custom", methods=["POST"])
+def store_artist_check_custom():
+    if request.method == 'POST':
+        user_input = request.form['input']
+        tkn = request.form['token']  # token
+        rtkn = request.form['refreshToken']  # refresh token
+        auth_client = clientID + ":" + clientSecret
+        auth_encode = 'Basic ' + base64.b64encode(auth_client.encode()).decode()
+        try:
+            sp = spotipy.Spotify(tkn)
+            song_list = get_artist_songs(user_input, sp)
+            song_list.insert(0, "Limited Selection" if len(song_list) < 10 else "")
+            return "Artist_has_no_url" if len(song_list) < 1 else json.dumps(song_list), 202
+        except:
+            try:
+                headers = {
+                    'Authorization': auth_encode,
+                }
+                data = {
+                    'grant_type': 'refresh_token',
+                    'refresh_token': rtkn
+                }
+                tkn = requests.post('https://accounts.spotify.com/api/token', data=data, headers=headers).json()[
+                    'access_token']
+                return redirect('/single-player' + "?token=" + tkn + "&rtoken=" + rtkn + "&refreshed=true")
+            except:
+                return "Token Failed"
+
+
+@views.route("/artist_suggestions", methods=["POST"])
+def artist_suggestions():
+    if request.method == 'POST':
+        param = request.form.to_dict()
+        return json.dumps(get_suggestion_artists(param["input"])), 202
 
 
 @views.route("/callback")
 def callback():
     code = request.args['code']
-    return redirect(url_for('views.single_player'))
+    encoded_credentials = base64.b64encode(clientID.encode() + b':' + clientSecret.encode()).decode("utf-8")
+    token_headers = {
+        "Authorization": "Basic " + encoded_credentials,
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    token_data = {
+        "grant_type": "authorization_code",
+        "code": code,
+        "redirect_uri": redirect_uri
+    }
+    tokens = requests.post("https://accounts.spotify.com/api/token", data=token_data, headers=token_headers).json()
+    return redirect('/single-player' + "?token=" + tokens['access_token'] + "&rtoken=" + tokens['refresh_token'])
 
 
 @views.route("/authorize_user")
@@ -61,61 +113,40 @@ def authorize_user():
     return make_response(redirect(authorize_url + query_params))
 
 
-def get_artist_songs(artist_name, blank_space):
+def get_artist_songs(artist_name, spotify_object=spotifyObject):
     songs_list = []
     artist_list = []
-    if blank_space == "Limit":
-        songs_list.append("Limited Selection")
-    elif blank_space == "No Limit":
-        songs_list.append("")
 
     songs_list.append(get_img_link(artist_name))
 
-    results = spotifyObject.search(q=artist_name, type='artist')
+    results = spotify_object.search(q=artist_name, type='artist')
 
     for item in results['artists']['items']:
         artist_list.append(item['name'])
         if len(artist_list) > 0:
             break
 
-    results = spotifyObject.search(q="artist:" + artist_list[0], type='track', limit=50, market="US")
+    results = spotify_object.search(q="artist:" + artist_list[0], type='track', limit=50, market="US")
 
-    for track in results['tracks']['items']:
-        song_name = track['name'].replace(",", "")
-        preview_url = track['preview_url']
+    for trk in results['tracks']['items']:
+        song = spotify_object.track(trk['id'])
+        song_name = song['name'].replace(",", "")
+        preview_url = song['preview_url']
 
-        artist_check = track['artists'][0]['name']
-
-        if song_name and preview_url and artist_check.lower().strip() == artist_name.lower().strip() and not duplicateSongCheck(
-                song_name, songs_list):
+        if song_name and preview_url and artist_list[
+            0].lower().strip() == artist_name.lower().strip() and not duplicateSongCheck(
+            song_name, songs_list):
             songs_list.append(f"{song_name}|#&{preview_url} ")
 
     return songs_list
 
 
 def duplicateSongCheck(song_name, songs_list):
+    # run both through a clean data function (possible improvment)
     for song in songs_list:
-        if song_name == song.split("|"):
+        if song_name == song.split("|#&"):
             return True
     return False
-
-
-"""
-"""
-
-
-def artist_check(artist_name):
-    if len(get_artist_songs(artist_name, "")) >= 10:
-        return artist_name  # if artist has more than 10 playable songs, returns artist
-
-    elif 10 > len(get_artist_songs(artist_name, "")) > 2:
-        return artist_name + "&%!", len(get_artist_songs(artist_name, ""))  # if artist has between 1 and 10 playable
-        # songs, returns a different code that will allow a pop up disclaimer warning the player about the small song
-        # amount. Returns length of song list.
-
-    else:
-        no_url = "Artist_has_no_url"
-        return no_url  # if artist has no playable songs, returns an error
 
 
 def get_img_link(artist_name):
@@ -129,17 +160,9 @@ def get_img_link(artist_name):
         return ""
 
 
-def getToken(code, client_id, client_secret, redirect_uri):
-    body = {
-        "grant_type": 'authorization_code',
-        "code": code,
-        "redirect_uri": redirect_uri,
-        "client_id": client_id,
-        "client_secret": client_secret
-    }
-
-    encoded = base64.b64encode("{}:{}".format(client_id, client_secret))
-    headers = {"Content-Type": HEADER, "Authorization": "Basic {}".format(encoded)}
-
-    post = requests.post(SPOTIFY_URL_TOKEN, params=body, headers=headers)
-    return handleToken(json.loads(post.text))
+def get_suggestion_artists(artist_name):
+    results = spotifyObject.search(q='artist:' + artist_name, type='artist')
+    artist_list = []
+    for artist in results['artists']['items']:
+        artist_list.append(artist['name'])
+    return artist_list

@@ -14,6 +14,7 @@ const ARTIST_INPUT = document.getElementById("artist-input");
 const ARTIST_INPUT_BACKGROUND = document.getElementById("artist-input-background");
 const ARTIST_LOAD_ICON = document.getElementById("artist-loader");
 const SONG_INPUT_AUTOCOMPLETE = document.getElementById("autocomplete-song-input");
+const ARTIST_INPUT_AUTOCOMPLETE = document.getElementById("autocomplete-artist-input")
 const COUNTDOWN = document.getElementById("countdown");
 const SCORE = document.getElementById("score");
 const RIGHT_ANSWER = document.getElementById("right-answer");
@@ -25,6 +26,7 @@ const PHOTO_CONTAINER = document.getElementById("photo-container")
 const HIGHSCORE_TEXT = document.getElementById("highscore")
 const ARTIST_WARNING = document.getElementById("warning-icon")
 
+const queryParams = new URLSearchParams(window.location.search);
 
 const orgPoint = 1000;
 const streakMultiplier = 1.02;
@@ -49,6 +51,19 @@ let score = 0;
 let highScore = 0;
 let artistPhoto = ""
 
+// Acts like the main function
+window.onload = (event) => {
+    if(queryParams.get("token") != null && queryParams.get("rtoken") != null && queryParams.has("refreshed") != null) {
+        location.assign("http://127.0.0.1:8080/single-player");
+        localStorage.setItem("token", queryParams.get("token"));
+        localStorage.setItem("refreshToken", queryParams.get("rtoken"));
+        localStorage.setItem("isRefreshed", queryParams.has("refreshed").toString());
+        if(localStorage.getItem("isRefreshed") !== "false"){
+            alert("Try again! We just refreshed our connection to your account")
+        }
+    }
+};
+
 function playMusic(){
     if(!currentlyPlaying && allowPlayMusic){
         SONG_INPUT.removeAttribute('list');
@@ -70,10 +85,10 @@ function playMusic(){
     }
 }
 function resetMusic(){
+    music.pause()
     music = new Audio()
     music.currentTime = 0;
     currentlyPlaying = false;
-    music.pause()
 }
 
 /*
@@ -144,42 +159,73 @@ function setHighScore(){
  */
 function submitArtist(){
     if(allowInput) {
-        allowPlayMusic = false;
-        ARTIST_LOAD_ICON.style.opacity = "1";
-        disableUserInput();
-        $.ajax({
-            type: "POST",
-            url: "/views/store_artist_check",
-            beforeSend: function (xhr) {
-                xhr.overrideMimeType("text/plain")
-            },
-            data: {"input": ARTIST_INPUT.value},
-        }).done(function (data) {
-            if (data !== "Artist_has_no_url") {
-                allowPlayMusic = true;
-                data = decodeURIComponent(JSON.parse(data)); //allows for special unicode characters
-                currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(","); //creates array based on data
-                if(currentSongs[0] === "Limited Selection"){
-                    ARTIST_WARNING.style.display = "block";
-                }
-                artistPhoto = currentSongs[1];
-                ARTIST_PHOTO.src = artistPhoto;
-                if(artistPhoto !== "")
-                    PHOTO_CONTAINER.style.display = "block";
-                retrieveLocalHighscores();
-                currentSongs.splice(0, 2); //removes the artist url and "artist_has_no_url" from the array
-                backupCurrentSongs = currentSongs.slice(0);
-                selectSong();
-                setAutocomplete();
-            } else {
-                alert("The artist you entered doesn't have preview URLs! Try another artist!");
-            }
-            ARTIST_INPUT.blur("0px");
-            ARTIST_LOAD_ICON.style.opacity = "0";
-            SCORE.innerText = "0"
-            enableUserInput();
-        })
+        if(localStorage.getItem("token") != null){
+            getCustomSongs();
+        }
+        else{
+            getDefaultSongs();
+        }
     }
+}
+
+function getCustomSongs(){
+    allowPlayMusic = false;
+    ARTIST_LOAD_ICON.style.opacity = "1";
+    disableUserInput();
+    console.log(queryParams.get("token"))
+    console.log(queryParams.get("rtoken"))
+    $.ajax({
+        type: "POST",
+        url: "/store_artist_check_custom",
+        beforeSend: function (xhr) {
+            xhr.overrideMimeType("text/plain")
+        },
+        data: {"input": ARTIST_INPUT.value, "token": localStorage.getItem("token"), "refreshToken": localStorage.getItem("refreshToken")},
+    }).done(function (data) {
+        cleanReturnedData(data);
+    })
+}
+function getDefaultSongs(){
+    allowPlayMusic = false;
+    ARTIST_LOAD_ICON.style.opacity = "1";
+    disableUserInput();
+    $.ajax({
+        type: "POST",
+        url: "/store_artist_check",
+        beforeSend: function (xhr) {
+            xhr.overrideMimeType("text/plain")
+        },
+        data: {"input": ARTIST_INPUT.value},
+    }).done(function (data) {
+        cleanReturnedData(data);
+    })
+}
+
+function cleanReturnedData(data){
+    if (data !== "Artist_has_no_url") {
+            allowPlayMusic = true;
+            data = decodeURIComponent(JSON.parse(data)); //allows for special unicode characters
+            currentSongs = data
+            if(currentSongs[0] === "Limited Selection"){
+                ARTIST_WARNING.style.display = "block";
+            }
+            artistPhoto = currentSongs[1];
+            ARTIST_PHOTO.src = artistPhoto;
+            if(artistPhoto !== "")
+                PHOTO_CONTAINER.style.display = "block";
+            retrieveLocalHighscores();
+            currentSongs.splice(0, 2); //removes the artist url and "artist_has_no_url" from the array
+            backupCurrentSongs = currentSongs.slice(0);
+            selectSong();
+            setSongAutocomplete();
+            SCORE.innerText = "0"
+        } else {
+            alert("The artist you entered doesn't have preview URLs! Check your spelling or try another artist.");
+            ARTIST_INPUT.value = ""
+        }
+        ARTIST_INPUT.blur("0px");
+        ARTIST_LOAD_ICON.style.opacity = "0";
+        enableUserInput();
 }
 function selectSong(){
     if(currentSongs.length > 0){
@@ -213,6 +259,18 @@ ARTIST_INPUT.addEventListener("keyup", function(event) {
     if (event.key === "Enter") {
         submitArtist();
     }
+    else{
+        $.ajax({
+        type: "POST",
+        url: "/artist_suggestions",
+        beforeSend: function (xhr) {
+            xhr.overrideMimeType("text/plain")
+        },
+        data: {"input": ARTIST_INPUT.value},
+        }).done(function (data) {
+            setArtistAutocomplete(JSON.parse(data))
+        })
+    }
 });
 
 function resetSongInput(){
@@ -232,8 +290,6 @@ function incorrectAnswerAnimation(){
 
 /* CHECKS IF CORRECT ANSWER */
 function onSongInput(input) {
-    console.log("edit")
-    console.log(SONG_INPUT.value)
     if (input === "") {
         input = SONG_INPUT.value
     }
@@ -252,9 +308,17 @@ function onSongInput(input) {
         if (score > highScore) {
             setHighScore();
         }
+        resetMusic();
         selectSong();
         resetCountdown();
-        resetMusic();
+        playMusic();
+    }
+}
+
+function onArtistInput(){
+    if (ARTIST_INPUT.value === "") {
+        ARTIST_INPUT.blur("0px")
+        ARTIST_INPUT.focus()
     }
 }
 
@@ -294,7 +358,7 @@ function cleanInput(string){
     }
     return string.toLowerCase().replace(/'/g,"").replace(/"/g,"").trim()
 }
-function setAutocomplete(){
+function setSongAutocomplete(){
     $(SONG_INPUT_AUTOCOMPLETE).empty();
     outerloop: for(let i = 0; i < backupCurrentSongs.length; i++){
         for(let x = 0; x < SONG_INPUT_AUTOCOMPLETE.children.length; x++){
@@ -304,6 +368,19 @@ function setAutocomplete(){
         let option = document.createElement("option");
         option.value = backupCurrentSongs[i].split("|#&")[0].trim()
         SONG_INPUT_AUTOCOMPLETE.appendChild(option);
+    }
+}
+
+function setArtistAutocomplete(data){
+    outerloop: for(let i = 0; i < data.length; i++){
+        for(let x = 0; x < ARTIST_INPUT_AUTOCOMPLETE.children.length; x++){
+            if(data[i] === ARTIST_INPUT_AUTOCOMPLETE.children[x].value){
+                continue outerloop;
+            }
+        }
+        let option = document.createElement("option");
+        option.value = data[i]
+        ARTIST_INPUT_AUTOCOMPLETE.appendChild(option);
     }
 }
 
