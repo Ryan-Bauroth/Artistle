@@ -172,8 +172,6 @@ function getCustomSongs(){
     allowPlayMusic = false;
     ARTIST_LOAD_ICON.style.opacity = "1";
     disableUserInput();
-    console.log(queryParams.get("token"))
-    console.log(queryParams.get("rtoken"))
     $.ajax({
         type: "POST",
         url: "/store_artist_check_custom",
@@ -205,7 +203,10 @@ function cleanReturnedData(data){
     if (data !== "Artist_has_no_url") {
             allowPlayMusic = true;
             data = decodeURIComponent(JSON.parse(data)); //allows for special unicode characters
-            currentSongs = data
+            currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(",");
+            for(let i = 0; i < currentSongs.length; i++){
+                currentSongs[i].replace("[COMMA HERE]",",")
+            }
             if(currentSongs[0] === "Limited Selection"){
                 ARTIST_WARNING.style.display = "block";
             }
@@ -285,7 +286,7 @@ function pointsAnimation(){
 function incorrectAnswerAnimation(){
     WRONG_ANSWER.textContent = currentSongName;
     WRONG_DIV.style.display = "table";
-    scoreResetAnimationInterval = window.setInterval(scoreResetAnimation, (score/animationTime));
+    scoreResetAnimationInterval = window.setInterval(scoreResetAnimation, (100), score/animationTime);
 }
 
 /* CHECKS IF CORRECT ANSWER */
@@ -428,8 +429,9 @@ function resetAnswerDivs(){
     RIGHT_DIV.style.display = "none";
 }
 
-function scoreResetAnimation() {
-    SCORE.innerText = (Math.round(parseInt(SCORE.innerText) - 50 + Math.random())).toString();
+function scoreResetAnimation(lossAmount) {
+    lossAmount = lossAmount * .1
+    SCORE.innerText = (Math.round(parseInt(SCORE.innerText) - lossAmount + Math.random())).toString();
     if (parseInt(SCORE.innerText) <= 0 || currentlyPlaying) {
         window.clearInterval(scoreResetAnimationInterval);
         SCORE.innerText = "0";

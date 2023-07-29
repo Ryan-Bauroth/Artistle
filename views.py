@@ -130,7 +130,7 @@ def get_artist_songs(artist_name, spotify_object=spotifyObject):
 
     for trk in results['tracks']['items']:
         song = spotify_object.track(trk['id'])
-        song_name = song['name'].replace(",", "")
+        song_name = song['name'].replace(",", "[COMMA HERE]")
         preview_url = song['preview_url']
 
         if song_name and preview_url and artist_list[
