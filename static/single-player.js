@@ -65,22 +65,27 @@ window.onload = (event) => {
 };
 
 function playMusic(){
-    if(!currentlyPlaying && allowPlayMusic){
+    if(!currentlyPlaying && allowPlayMusic) {
         SONG_INPUT.removeAttribute('list');
         SONG_INPUT.value = "";
-        if(music != null){
-            currentlyPlaying = true;
-            music.play().then(function() {
-                if (msTimerInterval != null)
-                    window.clearInterval(msTimerInterval);
-                time = 1000;
-                countdownTimerInterval = window.setInterval(countdown, 1000);
-                msTimerInterval = window.setInterval(calcMSTime, 10);
-                music.addEventListener("ended", function(){
-                    music.currentTime = 0;
-                    currentlyPlaying = false;
-                });
-            })
+        try {
+            if (music != null) {
+                currentlyPlaying = true;
+                music.play().then(function () {
+                    if (msTimerInterval != null)
+                        window.clearInterval(msTimerInterval);
+                    time = 1000;
+                    countdownTimerInterval = window.setInterval(countdown, 1000);
+                    msTimerInterval = window.setInterval(calcMSTime, 10);
+                    music.addEventListener("ended", function () {
+                        music.currentTime = 0;
+                        currentlyPlaying = false;
+                    });
+                })
+            }
+        }
+        catch{
+            alert("Looks like your songs haven't loaded yet! If you keep getting this error try restarting your computer")
         }
     }
 }
@@ -204,9 +209,11 @@ function cleanReturnedData(data){
             allowPlayMusic = true;
             data = decodeURIComponent(JSON.parse(data)); //allows for special unicode characters
             currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(",");
+            console.log(currentSongs)
             for(let i = 0; i < currentSongs.length; i++){
-                currentSongs[i].replace("[COMMA HERE]",",")
+                currentSongs[i] = currentSongs[i].replace("{COMMA HERE}",",")
             }
+            console.log(currentSongs)
             if(currentSongs[0] === "Limited Selection"){
                 ARTIST_WARNING.style.display = "block";
             }
@@ -286,7 +293,7 @@ function pointsAnimation(){
 function incorrectAnswerAnimation(){
     WRONG_ANSWER.textContent = currentSongName;
     WRONG_DIV.style.display = "table";
-    scoreResetAnimationInterval = window.setInterval(scoreResetAnimation, (100), score/animationTime);
+    scoreResetAnimationInterval = window.setInterval(scoreResetAnimation, (10), score/animationTime);
 }
 
 /* CHECKS IF CORRECT ANSWER */
@@ -373,6 +380,7 @@ function setSongAutocomplete(){
 }
 
 function setArtistAutocomplete(data){
+    console.log("set")
     outerloop: for(let i = 0; i < data.length; i++){
         for(let x = 0; x < ARTIST_INPUT_AUTOCOMPLETE.children.length; x++){
             if(data[i] === ARTIST_INPUT_AUTOCOMPLETE.children[x].value){
@@ -380,6 +388,7 @@ function setArtistAutocomplete(data){
             }
         }
         let option = document.createElement("option");
+        console.log("option set to " + data[i])
         option.value = data[i]
         ARTIST_INPUT_AUTOCOMPLETE.appendChild(option);
     }
@@ -430,10 +439,13 @@ function resetAnswerDivs(){
 }
 
 function scoreResetAnimation(lossAmount) {
-    lossAmount = lossAmount * .1
-    SCORE.innerText = (Math.round(parseInt(SCORE.innerText) - lossAmount + Math.random())).toString();
-    if (parseInt(SCORE.innerText) <= 0 || currentlyPlaying) {
-        window.clearInterval(scoreResetAnimationInterval);
-        SCORE.innerText = "0";
+    console.log(lossAmount)
+    lossAmount = lossAmount * 100
+    if(lossAmount > 1) {
+        SCORE.innerText = (Math.round(parseInt(SCORE.innerText) - lossAmount + Math.random())).toString();
+        if (parseInt(SCORE.innerText) <= 0 || currentlyPlaying) {
+            window.clearInterval(scoreResetAnimationInterval);
+            SCORE.innerText = "0";
+        }
     }
 }

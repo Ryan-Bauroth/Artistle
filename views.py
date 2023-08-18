@@ -130,7 +130,7 @@ def get_artist_songs(artist_name, spotify_object=spotifyObject):
 
     for trk in results['tracks']['items']:
         song = spotify_object.track(trk['id'])
-        song_name = song['name'].replace(",", "[COMMA HERE]")
+        song_name = song['name'].replace(",", "{COMMA HERE}")
         preview_url = song['preview_url']
 
         if song_name and preview_url and artist_list[
@@ -144,13 +144,13 @@ def get_artist_songs(artist_name, spotify_object=spotifyObject):
 def duplicateSongCheck(song_name, songs_list):
     # run both through a clean data function (possible improvment)
     for song in songs_list:
-        if song_name == song.split("|#&"):
+        if song is not None and song_name == song.split("|#&"):
             return True
     return False
 
 
 def get_img_link(artist_name):
-    results = spotifyObject.search(q='artist:' + artist_name, type='artist')
+    results = spotifyObject.search(q=artist_name, type='artist')
     try:
         items = results['artists']['items']
         if len(items) > 0:
@@ -161,7 +161,7 @@ def get_img_link(artist_name):
 
 
 def get_suggestion_artists(artist_name):
-    results = spotifyObject.search(q='artist:' + artist_name, type='artist')
+    results = spotifyObject.search(q=artist_name, type='artist')
     artist_list = []
     for artist in results['artists']['items']:
         artist_list.append(artist['name'])
