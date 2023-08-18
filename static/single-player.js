@@ -53,7 +53,12 @@ let artistPhoto = ""
 
 // Acts like the main function
 window.onload = (event) => {
-    if(queryParams.get("token") != null && queryParams.get("rtoken") != null && queryParams.has("refreshed") != null) {
+    resetTokens();
+};
+
+function resetTokens(){
+     if(queryParams.get("token") != null && queryParams.get("rtoken") != null && queryParams.has("refreshed") != null) {
+        console.log("run")
         location.assign("http://127.0.0.1:8080/single-player");
         localStorage.setItem("token", queryParams.get("token"));
         localStorage.setItem("refreshToken", queryParams.get("rtoken"));
@@ -62,7 +67,7 @@ window.onload = (event) => {
             alert("Try again! We just refreshed our connection to your account")
         }
     }
-};
+}
 
 function playMusic(){
     if(!currentlyPlaying && allowPlayMusic) {
@@ -205,15 +210,17 @@ function getDefaultSongs(){
 }
 
 function cleanReturnedData(data){
+    if(data.includes("?token=")){
+        localStorage.setItem("token", data.split("?token=")[1]);
+        data = data.split("?token=")[0]
+    }
     if (data !== "Artist_has_no_url") {
             allowPlayMusic = true;
             data = decodeURIComponent(JSON.parse(data)); //allows for special unicode characters
             currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(",");
-            console.log(currentSongs)
             for(let i = 0; i < currentSongs.length; i++){
                 currentSongs[i] = currentSongs[i].replace("{COMMA HERE}",",")
             }
-            console.log(currentSongs)
             if(currentSongs[0] === "Limited Selection"){
                 ARTIST_WARNING.style.display = "block";
             }
@@ -380,7 +387,6 @@ function setSongAutocomplete(){
 }
 
 function setArtistAutocomplete(data){
-    console.log("set")
     outerloop: for(let i = 0; i < data.length; i++){
         for(let x = 0; x < ARTIST_INPUT_AUTOCOMPLETE.children.length; x++){
             if(data[i] === ARTIST_INPUT_AUTOCOMPLETE.children[x].value){
@@ -388,7 +394,6 @@ function setArtistAutocomplete(data){
             }
         }
         let option = document.createElement("option");
-        console.log("option set to " + data[i])
         option.value = data[i]
         ARTIST_INPUT_AUTOCOMPLETE.appendChild(option);
     }
@@ -439,7 +444,6 @@ function resetAnswerDivs(){
 }
 
 function scoreResetAnimation(lossAmount) {
-    console.log(lossAmount)
     lossAmount = lossAmount * 100
     if(lossAmount > 1) {
         SCORE.innerText = (Math.round(parseInt(SCORE.innerText) - lossAmount + Math.random())).toString();

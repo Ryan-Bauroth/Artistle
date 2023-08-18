@@ -73,9 +73,11 @@ def store_artist_check_custom():
                     'grant_type': 'refresh_token',
                     'refresh_token': rtkn
                 }
-                tkn = requests.post('https://accounts.spotify.com/api/token', data=data, headers=headers).json()[
-                    'access_token']
-                return redirect('/single-player' + "?token=" + tkn + "&rtoken=" + rtkn + "&refreshed=true")
+                tkn = requests.post('https://accounts.spotify.com/api/token', data=data, headers=headers).json()
+                sp = spotipy.Spotify(tkn['access_token'])
+                song_list = get_artist_songs(user_input, sp)
+                song_list.insert(0, "Limited Selection" if len(song_list) < 10 else "")
+                return "Artist_has_no_url" + "?token=" + tkn['access_token'] + rtkn if len(song_list) < 1 else json.dumps(song_list) + "?token=" + tkn['access_token'] + "&rtoken=" + rtkn, 202
             except:
                 return "Token Failed"
 
