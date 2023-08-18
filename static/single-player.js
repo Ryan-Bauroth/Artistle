@@ -24,6 +24,7 @@ const WRONG_DIV = document.getElementById("wrong-div");
 const ARTIST_PHOTO = document.getElementById("photo");
 const PHOTO_CONTAINER = document.getElementById("photo-container")
 const HIGHSCORE_TEXT = document.getElementById("highscore")
+const LOGIN_ICON = document.getElementById("login-icon")
 const ARTIST_WARNING = document.getElementById("warning-icon")
 
 const queryParams = new URLSearchParams(window.location.search);
@@ -53,19 +54,21 @@ let artistPhoto = ""
 
 // Acts like the main function
 window.onload = (event) => {
+    if(localStorage.getItem("token") === null){
+        LOGIN_ICON.disabled = false;
+        LOGIN_ICON.style.opacity = "1"
+    }
+    else{
+        LOGIN_ICON.disabled = true
+    }
     resetTokens();
 };
 
 function resetTokens(){
-     if(queryParams.get("token") != null && queryParams.get("rtoken") != null && queryParams.has("refreshed") != null) {
-        console.log("run")
-        location.assign("http://127.0.0.1:8080/single-player");
+     if(queryParams.get("token") != null && queryParams.get("rtoken") != null) {
         localStorage.setItem("token", queryParams.get("token"));
         localStorage.setItem("refreshToken", queryParams.get("rtoken"));
-        localStorage.setItem("isRefreshed", queryParams.has("refreshed").toString());
-        if(localStorage.getItem("isRefreshed") !== "false"){
-            alert("Try again! We just refreshed our connection to your account")
-        }
+        location.assign(window.location.href.split("/single-player")[0] + "/single-player");
     }
 }
 
@@ -87,6 +90,7 @@ function playMusic(){
                         currentlyPlaying = false;
                     });
                 })
+                SONG_INPUT.focus();
             }
         }
         catch{
@@ -451,5 +455,11 @@ function scoreResetAnimation(lossAmount) {
             window.clearInterval(scoreResetAnimationInterval);
             SCORE.innerText = "0";
         }
+    }
+}
+
+LOGIN_ICON.onclick = function(){
+    if(LOGIN_ICON.disabled === false){
+            location.assign(window.location.href.replace("/single-player", "/authorize_user"));
     }
 }

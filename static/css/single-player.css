@@ -235,6 +235,16 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+#login-icon{
+  height: 20px;
+  width: 20px;
+  fill: var(--white);
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+}
 #warning-icon{
   fill: var(--pastel-pink);
   position: absolute;

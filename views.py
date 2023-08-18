@@ -6,10 +6,7 @@ import spotipy
 import os
 from dotenv import load_dotenv
 import requests
-
-# abstracted variables
-ARTIST_AUTOFILL_NUMBER = 5
-artist_check_num = -2
+from spotipy import SpotifyClientCredentials
 
 load_dotenv()
 
@@ -18,12 +15,8 @@ clientID = os.getenv('CLIENT_ID')
 clientSecret = os.getenv('CLIENT_SECRET')
 redirect_uri = os.getenv('REDIRECT_URI')
 
-oauth_object = spotipy.SpotifyOAuth(clientID, clientSecret, redirect_uri)
-token_dict = oauth_object.get_cached_token()
-token = token_dict['access_token']
-refresh_token = token_dict['refresh_token']
-spotifyObject = spotipy.Spotify(auth=token)
-user_name = spotifyObject.current_user()
+auth_manager = SpotifyClientCredentials(clientID, clientSecret)
+spotifyObject = spotipy.Spotify(auth_manager=auth_manager)
 
 views = Blueprint(__name__, "app")
 
