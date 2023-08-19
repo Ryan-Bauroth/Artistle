@@ -41,7 +41,7 @@ def store_artist_check():
         song_list = get_artist_songs(user_input, spotifyObject)
         song_list.insert(0, "Limited Selection" if len(
             song_list) < 10 else "")
-        return "Artist_has_no_url" if len(song_list) < 1 else json.dumps(song_list), 202
+        return "Artist_has_no_url" if len(song_list) < 2 else json.dumps(song_list), 202
 
 
 @views.route("/store_artist_check_custom", methods=["POST"])
@@ -56,7 +56,7 @@ def store_artist_check_custom():
             sp = spotipy.Spotify(tkn)
             song_list = get_artist_songs(user_input, sp)
             song_list.insert(0, "Limited Selection" if len(song_list) < 10 else "")
-            return "Artist_has_no_url" if len(song_list) < 1 else json.dumps(song_list), 202
+            return "Artist_has_no_url" if len(song_list) < 2 else json.dumps(song_list), 202
         except:
             try:
                 headers = {
@@ -71,12 +71,12 @@ def store_artist_check_custom():
                 song_list = get_artist_songs(user_input, sp)
                 song_list.insert(0, "Limited Selection" if len(song_list) < 10 else "")
                 return "Artist_has_no_url" + "?token=" + tkn['access_token'] + rtkn if len(
-                    song_list) < 1 else json.dumps(song_list) + "?token=" + tkn['access_token'] + "&rtoken=" + rtkn, 202
+                    song_list) < 2 else json.dumps(song_list) + "?token=" + tkn['access_token'] + "&rtoken=" + rtkn, 202
             except:
                 song_list = get_artist_songs(user_input, spotifyObject)
                 song_list.insert(0, "Limited Selection" if len(
                     song_list) < 10 else "")
-                return "Artist_has_no_url" if len(song_list) < 1 else json.dumps(song_list), 202
+                return "Artist_has_no_url" if len(song_list) < 2 else json.dumps(song_list), 202
 
 
 @views.route("/artist_suggestions", methods=["POST"])
@@ -117,8 +117,11 @@ def get_artist_songs(artist_name, spotify_object=spotifyObject):
 
     results = spotify_object.search(q=artist_name, type='artist')
 
-    base_artist_name = results['artists']['items'][0]['name']
-    base_artist_id = results['artists']['items'][0]['id']
+    if len(results['artists']['items']) > 0:
+        base_artist_name = results['artists']['items'][0]['name']
+        base_artist_id = results['artists']['items'][0]['id']
+    else:
+        return []
 
     results = spotify_object.search(q=base_artist_name, type='track', limit=50, market="US")
 

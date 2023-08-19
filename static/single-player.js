@@ -250,7 +250,7 @@ function cleanReturnedData(data){
             setSongAutocomplete();
             SCORE.innerText = "0"
         } else {
-            alert("The artist you entered doesn't have preview URLs! Check your spelling or try another artist.");
+            alert("We couldn't find the artist\"" + ARTIST_INPUT.value + "\".\n - Make sure you spelled the artist's name correctly\n - Log in with your spotify (beta)\n - Use a different artist");
             ARTIST_INPUT.value = ""
         }
         ARTIST_INPUT.blur("0px");
