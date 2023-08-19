@@ -54,7 +54,7 @@ let artistPhoto = ""
 let ignoreArtistInput = false;
 
 // Acts like the main function
-window.onload = (event) => {
+window.onload = () => {
     resetSongInputSize();
     if(localStorage.getItem("token") === null){
         LOGIN_ICON.disabled = false;
@@ -168,7 +168,7 @@ function enableUserInput(){
 }
 
 function retrieveLocalHighscores(){
-    HIGHSCORE_TEXT.textContent = localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score") != null ? "HIGH SCORE: " + Math.round(localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score")): "HIGH SCORE: 0";
+    HIGHSCORE_TEXT.textContent = localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score") != null ? "HIGH SCORE: " + Math.round(parseInt(localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score"))): "HIGH SCORE: 0";
     highScore = localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score") != null ? localStorage.getItem(ARTIST_INPUT.value.toLowerCase() + " high score"): 0;
 }
 function setHighScore(){
@@ -253,7 +253,7 @@ function cleanReturnedData(data){
             alert("We couldn't find the artist\"" + ARTIST_INPUT.value + "\".\n - Make sure you spelled the artist's name correctly\n - Log in with your spotify (beta)\n - Use a different artist");
             ARTIST_INPUT.value = ""
         }
-        ARTIST_INPUT.blur("0px");
+        ARTIST_INPUT.blur();
         ARTIST_LOAD_ICON.style.opacity = "0";
         enableUserInput();
 }
@@ -323,7 +323,7 @@ ARTIST_INPUT.addEventListener("keyup", function(event) {
 
 function resetSongInput(){
     SONG_INPUT.value = ""
-    SONG_INPUT.blur("0px");
+    SONG_INPUT.blur();
     SONG_INPUT.focus();
 }
 function pointsAnimation(){
@@ -342,7 +342,7 @@ function onSongInput(input) {
         input = SONG_INPUT.value
     }
     if (SONG_INPUT.value === "") {
-        SONG_INPUT.blur("0px")
+        SONG_INPUT.blur()
         SONG_INPUT.focus()
     }
     if (cleanInput(currentSongName) === cleanInput(input) && currentlyPlaying) {
@@ -365,7 +365,7 @@ function onSongInput(input) {
 
 function onArtistInput(){
     if (ARTIST_INPUT.value === "") {
-        ARTIST_INPUT.blur("0px")
+        ARTIST_INPUT.blur()
         ARTIST_INPUT.focus()
     }
 }
@@ -401,7 +401,7 @@ function cleanInput(string){
     }
     let replace = ["?","!",",",".","_","(",")","-","[","]","{","}"]
     for(let i = 0; i < replace.length; i++){
-        string = string.replace(i, "")
+        string = string.replace(replace[i], "")
     }
     return string.toLowerCase().replace(/'/g,"").replace(/"/g,"").trim()
 }

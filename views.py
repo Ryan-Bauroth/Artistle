@@ -1,7 +1,7 @@
 import base64
 import json
 from urllib.parse import urlencode
-from flask import Blueprint, render_template, request, make_response, redirect, url_for
+from flask import Blueprint, render_template, request, make_response, redirect
 import spotipy
 import os
 from dotenv import load_dotenv
@@ -131,13 +131,13 @@ def get_artist_songs(artist_name, spotify_object=spotifyObject):
         preview_url = song['preview_url']
         artist_id = song['artists'][0]['id']
 
-        if song_name and preview_url and base_artist_id == artist_id and not duplicateSongCheck(
+        if song_name and preview_url and base_artist_id == artist_id and not duplicate_song_check(
                 song_name, songs_list):
             songs_list.append(f"{song_name}|#&{preview_url} ")
     return songs_list
 
 
-def duplicateSongCheck(song_name, songs_list):
+def duplicate_song_check(song_name, songs_list):
     # run both through a clean data function (possible improvment)
     for song in songs_list:
         if song is not None and song_name == song.split("|#&"):
