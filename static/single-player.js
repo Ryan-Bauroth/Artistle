@@ -31,7 +31,7 @@ const queryParams = new URLSearchParams(window.location.search);
 
 const orgPoint = 1000;
 const streakMultiplier = 1.02;
-const animationTime = 1500;
+const animationTime = 2500;
 
 
 // Global Variables
@@ -51,9 +51,11 @@ let streak = 0;
 let score = 0;
 let highScore = 0;
 let artistPhoto = ""
+let ignoreArtistInput = false;
 
 // Acts like the main function
 window.onload = (event) => {
+    resetSongInputSize();
     if(localStorage.getItem("token") === null){
         LOGIN_ICON.disabled = false;
         LOGIN_ICON.style.opacity = "1"
@@ -63,6 +65,12 @@ window.onload = (event) => {
     }
     resetTokens();
 };
+
+window.addEventListener("resize", resetSongInputSize);
+
+function resetSongInputSize(){
+    SONG_INPUT.style.width = (SONG_INPUT_BACKGROUND.offsetWidth - 101).toString() + "px";
+}
 
 function resetTokens(){
      if(queryParams.get("token") != null && queryParams.get("rtoken") != null) {
@@ -135,9 +143,12 @@ function editArtist(){
 }
 
 ARTIST_INPUT.onfocusout = function(){
-    if(allowInput){
+    if(allowInput && !ignoreArtistInput){
         if(ARTIST_INPUT.value !== "")
         submitArtist();
+    }
+    else if(!ignoreArtistInput){
+        ignoreArtistInput = false;
     }
 };
 
@@ -278,6 +289,24 @@ ARTIST_INPUT.addEventListener("keyup", function(event) {
     if (event.key === "Enter") {
         submitArtist();
     }
+    else if(event.key === "Tab" && currentlyPlaying){
+        ignoreArtistInput = true;
+        SONG_INPUT.focus();
+         for(let i = 0; i < SONG_INPUT_AUTOCOMPLETE.children.length; i++){
+                if(SONG_INPUT_AUTOCOMPLETE.children[i].value.toLowerCase().startsWith(SONG_INPUT.value.toLowerCase())){
+                    SONG_INPUT.value= SONG_INPUT_AUTOCOMPLETE.children[i].value;
+                    SONG_INPUT.focus();
+                    return;
+                }
+            }
+            for(let i = 0; i < SONG_INPUT_AUTOCOMPLETE.children.length; i++){
+                if(SONG_INPUT_AUTOCOMPLETE.children[i].value.toLowerCase().includes(SONG_INPUT.value.toLowerCase())){
+                    SONG_INPUT.value = SONG_INPUT_AUTOCOMPLETE.children[i].value
+                    SONG_INPUT.focus();
+                    return;
+                }
+            }
+    }
     else{
         $.ajax({
         type: "POST",
@@ -340,7 +369,6 @@ function onArtistInput(){
         ARTIST_INPUT.focus()
     }
 }
-
 
 SONG_INPUT.addEventListener("keyup", function(event) {
     if (event.key === "Enter") {

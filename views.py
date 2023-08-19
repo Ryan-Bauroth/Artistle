@@ -70,9 +70,13 @@ def store_artist_check_custom():
                 sp = spotipy.Spotify(tkn['access_token'])
                 song_list = get_artist_songs(user_input, sp)
                 song_list.insert(0, "Limited Selection" if len(song_list) < 10 else "")
-                return "Artist_has_no_url" + "?token=" + tkn['access_token'] + rtkn if len(song_list) < 1 else json.dumps(song_list) + "?token=" + tkn['access_token'] + "&rtoken=" + rtkn, 202
+                return "Artist_has_no_url" + "?token=" + tkn['access_token'] + rtkn if len(
+                    song_list) < 1 else json.dumps(song_list) + "?token=" + tkn['access_token'] + "&rtoken=" + rtkn, 202
             except:
-                return "Token Failed"
+                song_list = get_artist_songs(user_input, spotifyObject)
+                song_list.insert(0, "Limited Selection" if len(
+                    song_list) < 10 else "")
+                return "Artist_has_no_url" if len(song_list) < 1 else json.dumps(song_list), 202
 
 
 @views.route("/artist_suggestions", methods=["POST"])
@@ -109,30 +113,24 @@ def authorize_user():
 
 
 def get_artist_songs(artist_name, spotify_object=spotifyObject):
-    songs_list = []
-    artist_list = []
-
-    songs_list.append(get_img_link(artist_name))
+    songs_list = [get_img_link(artist_name)]
 
     results = spotify_object.search(q=artist_name, type='artist')
 
-    for item in results['artists']['items']:
-        artist_list.append(item['name'])
-        if len(artist_list) > 0:
-            break
+    base_artist_name = results['artists']['items'][0]['name']
+    base_artist_id = results['artists']['items'][0]['id']
 
-    results = spotify_object.search(q="artist:" + artist_list[0], type='track', limit=50, market="US")
+    results = spotify_object.search(q=base_artist_name, type='track', limit=50, market="US")
 
     for trk in results['tracks']['items']:
         song = spotify_object.track(trk['id'])
         song_name = song['name'].replace(",", "{COMMA HERE}")
         preview_url = song['preview_url']
+        artist_id = song['artists'][0]['id']
 
-        if song_name and preview_url and artist_list[
-            0].lower().strip() == artist_name.lower().strip() and not duplicateSongCheck(
-            song_name, songs_list):
+        if song_name and preview_url and base_artist_id == artist_id and not duplicateSongCheck(
+                song_name, songs_list):
             songs_list.append(f"{song_name}|#&{preview_url} ")
-
     return songs_list
 
 
