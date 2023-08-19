@@ -17,9 +17,10 @@ As Artistle is currently under development, the tutorial is rather lacking. In t
 - Start guessing (but watch out for the 10 second timer!)
 
 ## The Future? (to make us better than sliced baguettes) 
-- [ ] Multiplayer?
-- [ ] Use user Playlists?
-- [ ] Global Highscores?
+- [x] Hosted Website?
 - [ ] Multiple Gamemodes?
 - [ ] Fun Tutorial?
+- [ ] Use user Playlists?
+- [ ] Multiplayer?
+- [ ] Global Highscores?
 - [ ] Bug fixes? (I know this one is boring but its probably the most important)
