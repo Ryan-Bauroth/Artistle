@@ -1,3 +1,6 @@
+/*** Copyright (C) 2023  Ryan Bauroth, Cem Akdurak, Arda Güzel, and Marcos Ginemar => See license file for more details */
+
+
 /***
  * Creates a script element for single-player.html allowing jquery reference in below functions ($ used)
  * @type {HTMLScriptElement}

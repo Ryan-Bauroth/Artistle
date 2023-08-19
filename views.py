@@ -1,3 +1,5 @@
+"""Copyright (C) 2023  Ryan Bauroth, Cem Akdurak, Arda Güzel, and Marcos Ginemar => See license file for more details"""
+
 import base64
 import json
 from urllib.parse import urlencode
