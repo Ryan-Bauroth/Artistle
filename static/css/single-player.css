@@ -26,7 +26,8 @@
 /* Song Input/Play */
 #song-input-div{
   height: 50px;
-  width: 45.1%;
+  width: 80%;
+  max-width: 649px;
   outline: 4px solid var(--spotify-green);
   margin:auto;
   border-radius: 15px;
@@ -111,11 +112,12 @@
   transform: translateX(-100%);
   display: none;
   animation-name: wronganswer;
-  animation-duration: 2s;
+  animation-duration: 3s;
   opacity: 1;
 }
 @keyframes wronganswer {
-  0% {transform: translateX(-100%);}
+  0% {opacity: 0; transform: translateX(-100%);}
+  33% {opacity: 1; transform: translateX(-100%);}
   95% {transform: translateX(-75%);}
   100% {opacity: 0}
 }
@@ -136,12 +138,12 @@
   display: none;
   animation-name: rightanswer;
   animation-duration: 1.5s;
-  opacity: 1;
+  opacity: 0;
 }
 @keyframes rightanswer {
-  0% {transform: translateX(100%);}
-  90% {transform: translateX(-100%);}
-  100% {opacity: 0}
+  0% {opacity: 0; transform: translateX(100%);}
+  33% {opacity: 1;}
+  100% {transform: translateX(-100%); opacity: 0}
 }
 #highscore-container{
   position: absolute;
@@ -187,7 +189,8 @@
 /* Artist Selection */
 #artist-input-outline{
   height: 34px;
-  width: 31.1%;
+  width: 60%;
+  max-width: 439px;
   outline: 4px solid var(--black);
   margin:auto;
   border-radius: 15px;
@@ -234,6 +237,16 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+#login-icon{
+  height: 20px;
+  width: 20px;
+  fill: var(--white);
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
 }
 #warning-icon{
   fill: var(--pastel-pink);
