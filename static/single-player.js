@@ -268,6 +268,7 @@ function selectSong(){
         let rand = getRandNumber()
         let musicStart = Math.floor(Math.random() * 20)
         music = new Audio(currentSongs[rand].split("|#&")[1] + "#t=" + musicStart.toString() + "," + (musicStart + 10).toString());
+        music.volume = .4
         currentSongName = currentSongs[rand].split("|#&")[0].trim();
         recentSongs.push(currentSongs[rand].split("|#&")[0].trim());
         currentSongs.splice(rand,1);
