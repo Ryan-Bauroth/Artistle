@@ -35,6 +35,8 @@ const queryParams = new URLSearchParams(window.location.search);
 const orgPoint = 1000;
 const streakMultiplier = 1.02;
 const animationTime = 2500;
+const modeSongTimeStr = "10"
+const modeScoreTime = 1000
 
 
 // Global Variables
@@ -93,7 +95,7 @@ function playMusic(){
                 music.play().then(function () {
                     if (msTimerInterval != null)
                         window.clearInterval(msTimerInterval);
-                    time = 1000;
+                    time = modeScoreTime;
                     countdownTimerInterval = window.setInterval(countdown, 1000);
                     msTimerInterval = window.setInterval(calcMSTime, 10);
                     music.addEventListener("ended", function () {
@@ -135,12 +137,12 @@ function editArtist(){
         highScore = 0;
         streak = 0;
         SCORE.textContent = ""
-        COUNTDOWN.textContent = "10";
+        COUNTDOWN.textContent = modeSongTimeStr;
         if (countdownTimerInterval != null)
             window.clearInterval(countdownTimerInterval)
         if (msTimerInterval != null)
             window.clearInterval(msTimerInterval)
-        time = 1000;
+        time = modeScoreTime;
         resetMusic();
     }
 }
@@ -228,6 +230,7 @@ function getDefaultSongs(){
 }
 
 function cleanReturnedData(data){
+    recentSongs = []
     if(data.includes("?token=")){
         localStorage.setItem("token", data.split("?token=")[1]);
         data = data.split("?token=")[0]
@@ -253,7 +256,7 @@ function cleanReturnedData(data){
             setSongAutocomplete();
             SCORE.innerText = "0"
         } else {
-            alert("We couldn't find the artist\"" + ARTIST_INPUT.value + "\".\n - Make sure you spelled the artist's name correctly\n - Log in with your spotify (beta)\n - Use a different artist");
+            alert("We couldn't find the artist \"" + ARTIST_INPUT.value + "\".\n - Make sure you spelled the artist's name correctly\n - Log in with your spotify (beta)\n - Use a different artist");
             ARTIST_INPUT.value = ""
         }
         ARTIST_INPUT.blur();
@@ -280,16 +283,22 @@ function selectSong(){
 function getRandNumber(){
     let rand = 0;
     let hasRun = false
-    while(!hasRun && !recentSongs.includes(currentSongs[rand].split("|#&")[0].trim)) {
+    let backupLimitationSkip = ""
+    let possibleRands = ""
+    for(let i = 0; i < currentSongs.length; i++){
+        possibleRands = possibleRands + i
+    }
+    while(possibleRands.split("").sort().join("") !== backupLimitationSkip.split("").sort().join("") && (!hasRun || recentSongs.map(cleanInput).includes(cleanInput(currentSongs[rand].split("|#&")[0])))) {
         hasRun = true;
         rand = Math.floor(Math.random() * currentSongs.length)
+        backupLimitationSkip = backupLimitationSkip + rand
     }
     return rand;
 }
 
 
 ARTIST_INPUT.addEventListener("keyup", function(event) {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && ARTIST_INPUT.value !== "") {
         submitArtist();
     }
     else if(event.key === "Tab" && currentlyPlaying){
@@ -319,7 +328,8 @@ ARTIST_INPUT.addEventListener("keyup", function(event) {
         },
         data: {"input": ARTIST_INPUT.value},
         }).done(function (data) {
-            setArtistAutocomplete(JSON.parse(data))
+            if(data !== "")
+                setArtistAutocomplete(JSON.parse(data))
         })
     }
 });
@@ -355,7 +365,7 @@ function onSongInput(input) {
         setTimeout(resetAnswerDivs, animationTime);
         SCORE.innerText = Math.round(score).toString();
         streak += 1;
-        time = 1000;
+        time = modeScoreTime;
         if (score > highScore) {
             setHighScore();
         }
@@ -399,10 +409,10 @@ SONG_INPUT.addEventListener("keyup", function(event) {
 });
 
 function cleanInput(string){
-    if(!string.startsWith("(") && !string.startsWith("-")){
-        string = string.substring(0, string.indexOf("(") !== -1 ? string.indexOf("("): string.indexOf("-") !== -1 ? string.indexOf("-"): string.length)
+    if(!string.startsWith("(") && !string.startsWith("-") && !string.startsWith("–")){
+        string = string.substring(0, string.indexOf("(") !== -1 ? string.indexOf("("): string.indexOf("-") !== -1 ? string.indexOf("-"): string.indexOf("–") !== -1 ? string.indexOf("–"): string.length)
     }
-    let replace = ["?","!",",",".","_","(",")","-","[","]","{","}"]
+    let replace = ["?","!",",",".","_","(",")","-","[","]","{","}","–"]
     for(let i = 0; i < replace.length; i++){
         string = string.replace(replace[i], "")
     }
@@ -444,7 +454,7 @@ function countdown(){
         COUNTDOWN.textContent = (Number(COUNTDOWN.textContent) - 1).toString();
         window.clearInterval(countdownTimerInterval)
         window.clearInterval(msTimerInterval)
-        time = 1000;
+        time = modeScoreTime;
         currentlyPlaying = false;
         if(score > highScore){
             setHighScore();
@@ -460,7 +470,7 @@ function resetCountdown(){
     if(countdownTimerInterval != null){
         window.clearInterval(countdownTimerInterval)
     }
-    COUNTDOWN.textContent = "10";
+    COUNTDOWN.textContent = modeSongTimeStr;
 }
 
 function calculateScore(guessTime, streak, previousScore) {
