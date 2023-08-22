@@ -138,13 +138,14 @@ def get_artist_songs(artist_name, spotify_object=spotifyObject):
 
     for trk in results['tracks']['items']:
         song = spotify_object.track(trk['id'])
+        external_url = trk['external_urls']['spotify']
         song_name = song['name'].replace(",", "{COMMA HERE}")
         preview_url = song['preview_url']
         artist_id = song['artists'][0]['id']
 
         if song_name and preview_url and base_artist_id == artist_id and not duplicate_song_check(
                 song_name, decouple_songs(songs_list)):
-            songs_list.append(f"{song_name}|#&{preview_url} ")
+            songs_list.append(f"{song_name}|#&{preview_url}|#&{external_url}")
     return songs_list
 
 

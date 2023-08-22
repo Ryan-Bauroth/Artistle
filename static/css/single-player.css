@@ -9,6 +9,7 @@
   --black: rgb(0,0,0);
   --white: rgb(255,255,255);
   --pastel-pink: #ed719e;
+  --pastel-yellow: #FEFE95;
 }
 
 /* Background */
@@ -101,8 +102,9 @@
   text-align: right;
   font-family: Rubik, sans-serif;
   vertical-align: middle;
-  display: table-cell;
+  display: table;
   font-weight: lighter;
+  text-decoration: none;
 }
 #wrong-div{
   position: absolute;
@@ -116,10 +118,14 @@
   opacity: 1;
 }
 @keyframes wronganswer {
-  0% {opacity: 0; transform: translateX(-100%);}
-  33% {opacity: 1; transform: translateX(-100%);}
-  95% {transform: translateX(-75%);}
-  100% {opacity: 0}
+  0% {opacity: 1; transform: translateX(-100%);}
+  66% {opacity: 0; transform: translateX(-75%);}
+  100% {opacity: 0;}
+}
+@keyframes wronganswerfadein {
+  0% {opacity: 0;}
+  33% {opacity: 1;}
+  100% {opacity: 1;}
 }
 #right-answer{
   color: var(--spotify-green);

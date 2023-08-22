@@ -47,6 +47,7 @@ let currentSongs = [];
 let backupCurrentSongs = [];
 let recentSongs = []
 let currentSongName = ""
+let currentSongLink = ""
 let music = new Audio()
 let countdownTimerInterval;
 let time = 0;
@@ -87,6 +88,9 @@ function resetTokens(){
 
 function playMusic(){
     if(!currentlyPlaying && allowPlayMusic) {
+        WRONG_ANSWER.href = "about:blank"
+        WRONG_DIV.style.animationName = "wronganswer"
+        setTimeout(resetAnswerDivs, animationTime)
         SONG_INPUT.removeAttribute('list');
         SONG_INPUT.value = "";
         try {
@@ -102,6 +106,8 @@ function playMusic(){
                         music.currentTime = 0;
                         currentlyPlaying = false;
                     });
+                }).catch(() =>{
+                    alert("Whoops! Please try again")
                 })
                 SONG_INPUT.focus();
             }
@@ -133,6 +139,8 @@ function editArtist(){
         ARTIST_INPUT_BACKGROUND.style.filter = "blur(0px)";
         ARTIST_INPUT.disabled = false;
         HIGHSCORE_TEXT.textContent = ""
+        HIGHSCORE_TEXT.style.color = "var(--lightblue-gray)"
+        resetAnswerDivs()
         score = 0;
         highScore = 0;
         streak = 0;
@@ -270,12 +278,14 @@ function selectSong(){
         music = new Audio(currentSongs[rand].split("|#&")[1] + "#t=" + musicStart.toString() + "," + (musicStart + 10).toString());
         music.volume = .4
         currentSongName = currentSongs[rand].split("|#&")[0].trim();
+        currentSongLink = currentSongs[rand].split("|#&")[2]
         recentSongs.push(currentSongs[rand].split("|#&")[0].trim());
         currentSongs.splice(rand,1);
         if(backupCurrentSongs.length > 6 &&  recentSongs.length > 5)
             recentSongs.shift();
     }
     else{
+        HIGHSCORE_TEXT.style.color = "var(--pastel-yellow)"
         currentSongs = backupCurrentSongs.slice(0);
         selectSong();
     }
@@ -451,8 +461,9 @@ function countdown(){
     else {
         resetSongInput();
         incorrectAnswerAnimation();
-        setTimeout(resetAnswerDivs, animationTime + 300)
         COUNTDOWN.textContent = (Number(COUNTDOWN.textContent) - 1).toString();
+        WRONG_DIV.style.animationName = "wronganswerfadein"
+        WRONG_ANSWER.href = currentSongLink
         window.clearInterval(countdownTimerInterval)
         window.clearInterval(msTimerInterval)
         time = modeScoreTime;
