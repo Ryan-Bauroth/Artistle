@@ -139,7 +139,6 @@ function editArtist(){
         ARTIST_INPUT_BACKGROUND.style.filter = "blur(0px)";
         ARTIST_INPUT.disabled = false;
         HIGHSCORE_TEXT.textContent = ""
-        HIGHSCORE_TEXT.style.color = "var(--lightblue-gray)"
         resetAnswerDivs()
         score = 0;
         highScore = 0;
@@ -285,7 +284,6 @@ function selectSong(){
             recentSongs.shift();
     }
     else{
-        HIGHSCORE_TEXT.style.color = "var(--pastel-yellow)"
         currentSongs = backupCurrentSongs.slice(0);
         selectSong();
     }
