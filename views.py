@@ -1,3 +1,5 @@
+"""Copyright (C) 2023  Ryan Bauroth, Cem Akdurak, Arda Güzel, and Marcos Ginemar => See license file for more details"""
+
 import base64
 import json
 from urllib.parse import urlencode
@@ -33,15 +35,18 @@ def single_player():
 
 @views.route("/store_artist_check", methods=["POST"])
 def store_artist_check():
-    if request.method == 'POST':
-        user_input = request.form['input']
-        # print(user_input)
-        # print(artist_check(user_input))
-        # print(get_artist_songs(user_input, "Limit" if user_input + "&%!" in check else "No Limit", spotifyObject))
-        song_list = get_artist_songs(user_input, spotifyObject)
-        song_list.insert(0, "Limited Selection" if len(
-            song_list) < 10 else "")
-        return "Artist_has_no_url" if len(song_list) < 2 else json.dumps(song_list), 202
+    try:
+        if request.method == 'POST':
+            user_input = request.form['input']
+            # print(user_input)
+            # print(artist_check(user_input))
+            # print(get_artist_songs(user_input, "Limit" if user_input + "&%!" in check else "No Limit", spotifyObject))
+            song_list = get_artist_songs(user_input, spotifyObject)
+            song_list.insert(0, "Limited Selection" if len(
+                song_list) < 10 else "")
+            return "Artist_has_no_url" if len(song_list) < 3 else json.dumps(song_list), 202
+    except:
+        return ""
 
 
 @views.route("/store_artist_check_custom", methods=["POST"])
@@ -56,7 +61,7 @@ def store_artist_check_custom():
             sp = spotipy.Spotify(tkn)
             song_list = get_artist_songs(user_input, sp)
             song_list.insert(0, "Limited Selection" if len(song_list) < 10 else "")
-            return "Artist_has_no_url" if len(song_list) < 2 else json.dumps(song_list), 202
+            return "Artist_has_no_url" if len(song_list) < 3 else json.dumps(song_list), 202
         except:
             try:
                 headers = {
@@ -71,19 +76,25 @@ def store_artist_check_custom():
                 song_list = get_artist_songs(user_input, sp)
                 song_list.insert(0, "Limited Selection" if len(song_list) < 10 else "")
                 return "Artist_has_no_url" + "?token=" + tkn['access_token'] + rtkn if len(
-                    song_list) < 2 else json.dumps(song_list) + "?token=" + tkn['access_token'] + "&rtoken=" + rtkn, 202
+                    song_list) < 3 else json.dumps(song_list) + "?token=" + tkn['access_token'] + "&rtoken=" + rtkn, 202
             except:
-                song_list = get_artist_songs(user_input, spotifyObject)
-                song_list.insert(0, "Limited Selection" if len(
-                    song_list) < 10 else "")
-                return "Artist_has_no_url" if len(song_list) < 2 else json.dumps(song_list), 202
+                try:
+                    song_list = get_artist_songs(user_input, spotifyObject)
+                    song_list.insert(0, "Limited Selection" if len(
+                        song_list) < 10 else "")
+                    return "Artist_has_no_url" if len(song_list) < 3 else json.dumps(song_list), 202
+                except:
+                    return ""
 
 
 @views.route("/artist_suggestions", methods=["POST"])
 def artist_suggestions():
-    if request.method == 'POST':
-        param = request.form.to_dict()
-        return json.dumps(get_suggestion_artists(param["input"])), 202
+    try:
+        if request.method == 'POST':
+            param = request.form.to_dict()
+            return json.dumps(get_suggestion_artists(param["input"])), 202
+    except:
+        return ""
 
 
 @views.route("/callback")
@@ -127,22 +138,38 @@ def get_artist_songs(artist_name, spotify_object=spotifyObject):
 
     for trk in results['tracks']['items']:
         song = spotify_object.track(trk['id'])
+        external_url = trk['external_urls']['spotify']
         song_name = song['name'].replace(",", "{COMMA HERE}")
         preview_url = song['preview_url']
         artist_id = song['artists'][0]['id']
 
         if song_name and preview_url and base_artist_id == artist_id and not duplicate_song_check(
-                song_name, songs_list):
-            songs_list.append(f"{song_name}|#&{preview_url} ")
+                song_name, decouple_songs(songs_list)):
+            songs_list.append(f"{song_name}|#&{preview_url}|#&{external_url}")
     return songs_list
 
 
 def duplicate_song_check(song_name, songs_list):
-    # run both through a clean data function (possible improvment)
-    for song in songs_list:
-        if song is not None and song_name == song.split("|#&"):
-            return True
+    if song_name in songs_list:
+        return True
     return False
+
+
+def decouple_songs(song_list):
+    data = []
+    for entry in song_list:
+        data.append(entry.split("|#&")[0])
+    return data
+
+
+"""def clean_data(data):
+    if not data.startswith("(") and "(" in data:
+        data = data[0:data.find("(")]
+    if not data.startswith("–") and "–" in data:
+        data = data[0:data.find("–")]
+    if not data.startswith("-") and "-" in data:
+        data = data[0:data.find("-")]
+    return data.strip()"""
 
 
 def get_img_link(artist_name):
