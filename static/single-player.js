@@ -1,3 +1,6 @@
+/*** Copyright (C) 2023  Ryan Bauroth, Cem Akdurak, Arda Güzel, and Marcos Ginemar => See license file for more details */
+
+
 /***
  * Creates a script element for single-player.html allowing jquery reference in below functions ($ used)
  * @type {HTMLScriptElement}
@@ -32,6 +35,8 @@ const queryParams = new URLSearchParams(window.location.search);
 const orgPoint = 1000;
 const streakMultiplier = 1.02;
 const animationTime = 2500;
+const modeSongTimeStr = "10"
+const modeScoreTime = 1000
 
 
 // Global Variables
@@ -42,6 +47,7 @@ let currentSongs = [];
 let backupCurrentSongs = [];
 let recentSongs = []
 let currentSongName = ""
+let currentSongLink = ""
 let music = new Audio()
 let countdownTimerInterval;
 let time = 0;
@@ -82,6 +88,9 @@ function resetTokens(){
 
 function playMusic(){
     if(!currentlyPlaying && allowPlayMusic) {
+        WRONG_ANSWER.href = "about:blank"
+        WRONG_DIV.style.animationName = "wronganswer"
+        setTimeout(resetAnswerDivs, animationTime)
         SONG_INPUT.removeAttribute('list');
         SONG_INPUT.value = "";
         try {
@@ -90,13 +99,15 @@ function playMusic(){
                 music.play().then(function () {
                     if (msTimerInterval != null)
                         window.clearInterval(msTimerInterval);
-                    time = 1000;
+                    time = modeScoreTime;
                     countdownTimerInterval = window.setInterval(countdown, 1000);
                     msTimerInterval = window.setInterval(calcMSTime, 10);
                     music.addEventListener("ended", function () {
                         music.currentTime = 0;
                         currentlyPlaying = false;
                     });
+                }).catch(() =>{
+                    alert("Whoops! Please try again")
                 })
                 SONG_INPUT.focus();
             }
@@ -128,16 +139,17 @@ function editArtist(){
         ARTIST_INPUT_BACKGROUND.style.filter = "blur(0px)";
         ARTIST_INPUT.disabled = false;
         HIGHSCORE_TEXT.textContent = ""
+        resetAnswerDivs()
         score = 0;
         highScore = 0;
         streak = 0;
         SCORE.textContent = ""
-        COUNTDOWN.textContent = "10";
+        COUNTDOWN.textContent = modeSongTimeStr;
         if (countdownTimerInterval != null)
             window.clearInterval(countdownTimerInterval)
         if (msTimerInterval != null)
             window.clearInterval(msTimerInterval)
-        time = 1000;
+        time = modeScoreTime;
         resetMusic();
     }
 }
@@ -225,6 +237,7 @@ function getDefaultSongs(){
 }
 
 function cleanReturnedData(data){
+    recentSongs = []
     if(data.includes("?token=")){
         localStorage.setItem("token", data.split("?token=")[1]);
         data = data.split("?token=")[0]
@@ -250,7 +263,7 @@ function cleanReturnedData(data){
             setSongAutocomplete();
             SCORE.innerText = "0"
         } else {
-            alert("We couldn't find the artist\"" + ARTIST_INPUT.value + "\".\n - Make sure you spelled the artist's name correctly\n - Log in with your spotify (beta)\n - Use a different artist");
+            alert("We couldn't find the artist \"" + ARTIST_INPUT.value + "\".\n - Make sure you spelled the artist's name correctly\n - Log in with your spotify (beta)\n - Use a different artist");
             ARTIST_INPUT.value = ""
         }
         ARTIST_INPUT.blur();
@@ -262,7 +275,9 @@ function selectSong(){
         let rand = getRandNumber()
         let musicStart = Math.floor(Math.random() * 20)
         music = new Audio(currentSongs[rand].split("|#&")[1] + "#t=" + musicStart.toString() + "," + (musicStart + 10).toString());
+        music.volume = .4
         currentSongName = currentSongs[rand].split("|#&")[0].trim();
+        currentSongLink = currentSongs[rand].split("|#&")[2]
         recentSongs.push(currentSongs[rand].split("|#&")[0].trim());
         currentSongs.splice(rand,1);
         if(backupCurrentSongs.length > 6 &&  recentSongs.length > 5)
@@ -277,16 +292,22 @@ function selectSong(){
 function getRandNumber(){
     let rand = 0;
     let hasRun = false
-    while(!hasRun && !recentSongs.includes(currentSongs[rand].split("|#&")[0].trim)) {
+    let backupLimitationSkip = ""
+    let possibleRands = ""
+    for(let i = 0; i < currentSongs.length; i++){
+        possibleRands = possibleRands + i
+    }
+    while(possibleRands.split("").sort().join("") !== backupLimitationSkip.split("").sort().join("") && (!hasRun || recentSongs.map(cleanInput).includes(cleanInput(currentSongs[rand].split("|#&")[0])))) {
         hasRun = true;
         rand = Math.floor(Math.random() * currentSongs.length)
+        backupLimitationSkip = backupLimitationSkip + rand
     }
     return rand;
 }
 
 
 ARTIST_INPUT.addEventListener("keyup", function(event) {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && ARTIST_INPUT.value !== "") {
         submitArtist();
     }
     else if(event.key === "Tab" && currentlyPlaying){
@@ -316,7 +337,8 @@ ARTIST_INPUT.addEventListener("keyup", function(event) {
         },
         data: {"input": ARTIST_INPUT.value},
         }).done(function (data) {
-            setArtistAutocomplete(JSON.parse(data))
+            if(data !== "")
+                setArtistAutocomplete(JSON.parse(data))
         })
     }
 });
@@ -352,7 +374,7 @@ function onSongInput(input) {
         setTimeout(resetAnswerDivs, animationTime);
         SCORE.innerText = Math.round(score).toString();
         streak += 1;
-        time = 1000;
+        time = modeScoreTime;
         if (score > highScore) {
             setHighScore();
         }
@@ -396,10 +418,10 @@ SONG_INPUT.addEventListener("keyup", function(event) {
 });
 
 function cleanInput(string){
-    if(!string.startsWith("(") && !string.startsWith("-")){
-        string = string.substring(0, string.indexOf("(") !== -1 ? string.indexOf("("): string.indexOf("-") !== -1 ? string.indexOf("-"): string.length)
+    if(!string.startsWith("(") && !string.startsWith("-") && !string.startsWith("–")){
+        string = string.substring(0, string.indexOf("(") !== -1 ? string.indexOf("("): string.indexOf("-") !== -1 ? string.indexOf("-"): string.indexOf("–") !== -1 ? string.indexOf("–"): string.length)
     }
-    let replace = ["?","!",",",".","_","(",")","-","[","]","{","}"]
+    let replace = ["?","!",",",".","_","(",")","-","[","]","{","}","–"]
     for(let i = 0; i < replace.length; i++){
         string = string.replace(replace[i], "")
     }
@@ -437,11 +459,12 @@ function countdown(){
     else {
         resetSongInput();
         incorrectAnswerAnimation();
-        setTimeout(resetAnswerDivs, animationTime + 300)
         COUNTDOWN.textContent = (Number(COUNTDOWN.textContent) - 1).toString();
+        WRONG_DIV.style.animationName = "wronganswerfadein"
+        WRONG_ANSWER.href = currentSongLink
         window.clearInterval(countdownTimerInterval)
         window.clearInterval(msTimerInterval)
-        time = 1000;
+        time = modeScoreTime;
         currentlyPlaying = false;
         if(score > highScore){
             setHighScore();
@@ -457,7 +480,7 @@ function resetCountdown(){
     if(countdownTimerInterval != null){
         window.clearInterval(countdownTimerInterval)
     }
-    COUNTDOWN.textContent = "10";
+    COUNTDOWN.textContent = modeSongTimeStr;
 }
 
 function calculateScore(guessTime, streak, previousScore) {

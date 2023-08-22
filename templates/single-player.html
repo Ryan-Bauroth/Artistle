@@ -18,13 +18,13 @@
     <datalist id="autocomplete-song-input"></datalist>
     <svg id="play-button" xmlns="http://www.w3.org/2000/svg" onclick="playMusic()" viewBox="0 0 384 512"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg>
     <div id="wrong-div">
-      <p id="wrong-answer">TEST</p>
+      <a target="_blank" rel="noopener" id="wrong-answer"></a>
     </div>
     <div id="score-container">
       <p id="score"></p>
     </div>
     <div id="right-div">
-      <p id="right-answer">+567</p>
+      <p id="right-answer">ERROR</p>
     </div>
     <div id="highscore-container">
       <p id="highscore"></p>
@@ -36,7 +36,7 @@
   <div id="artist-input-outline">
     <div id="artist-input-background">
       <div id="artist-loader"></div>
-      <input type="text" id="artist-input" name="artist" placeholder="Pick an Artist...", spellcheck="false" onclick="editArtist()" onkeyup="if(this.value.length>=1)this.setAttribute('list','autocomplete-artist-input');" onkeydown="if(this.value.length<1||event.keyCode===8)this.removeAttribute('list');" oninput='onArtistInput()'>
+      <input type="text" id="artist-input" name="artist" placeholder="Pick an Artist..." spellcheck="false" onclick="editArtist()" onkeyup="if(this.value.length>=1)this.setAttribute('list','autocomplete-artist-input');" onkeydown="if(this.value.length<1||event.keyCode===8)this.removeAttribute('list');" oninput='onArtistInput()'>
       <datalist id="autocomplete-artist-input"></datalist>
     </div>
     <svg id="login-icon" title="Login" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M217.9 105.9L340.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L217.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1L32 320c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM352 416l64 0c17.7 0 32-14.3 32-32l0-256c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c53 0 96 43 96 96l0 256c0 53-43 96-96 96l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></svg>
