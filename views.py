@@ -38,13 +38,20 @@ def store_artist_check():
     try:
         if request.method == 'POST':
             user_input = request.form['input']
-            # print(user_input)
-            # print(artist_check(user_input))
-            # print(get_artist_songs(user_input, "Limit" if user_input + "&%!" in check else "No Limit", spotifyObject))
-            song_list = get_artist_songs(user_input, spotifyObject)
-            song_list.insert(0, "Limited Selection" if len(
-                song_list) < 10 else "")
-            return "Artist_has_no_url" if len(song_list) < 3 else json.dumps(song_list), 202
+            if user_input.lower().startswith("category:") or user_input.lower().startswith("cat:"):
+                if user_input.lower().startswith("category:"):
+                    cat_check = "category:"
+                else:
+                    cat_check = "cat:"
+                return get_category_playlists(user_input.lower()[len(cat_check):].strip(), spotifyObject)
+            else:
+                # print(user_input)
+                # print(artist_check(user_input))
+                # print(get_artist_songs(user_input, "Limit" if user_input + "&%!" in check else "No Limit", spotifyObject))
+                song_list = get_artist_songs(user_input, spotifyObject)
+                song_list.insert(0, "Limited Selection" if len(
+                    song_list) < 10 else "")
+                return "Artist_has_no_url" if len(song_list) < 3 else json.dumps(song_list), 202
     except:
         return ""
 
@@ -59,6 +66,12 @@ def store_artist_check_custom():
         auth_encode = 'Basic ' + base64.b64encode(auth_client.encode()).decode()
         try:
             sp = spotipy.Spotify(tkn)
+            if user_input.lower().startswith("category:") or user_input.lower().startswith("cat:"):
+                if user_input.lower().startswith("category:"):
+                    cat_check = "category:"
+                else:
+                    cat_check = "cat:"
+                return get_category_playlists(user_input.lower()[len(cat_check):], sp)
             song_list = get_artist_songs(user_input, sp)
             song_list.insert(0, "Limited Selection" if len(song_list) < 10 else "")
             return "Artist_has_no_url" if len(song_list) < 3 else json.dumps(song_list), 202
@@ -73,12 +86,24 @@ def store_artist_check_custom():
                 }
                 tkn = requests.post('https://accounts.spotify.com/api/token', data=data, headers=headers).json()
                 sp = spotipy.Spotify(tkn['access_token'])
+                if user_input.lower().startswith("category:") or user_input.lower().startswith("cat:"):
+                    if user_input.lower().startswith("category:"):
+                        cat_check = "category:"
+                    else:
+                        cat_check = "cat:"
+                    return get_category_playlists(user_input.lower()[len(cat_check):].strip(), sp)
                 song_list = get_artist_songs(user_input, sp)
                 song_list.insert(0, "Limited Selection" if len(song_list) < 10 else "")
                 return "Artist_has_no_url" + "?token=" + tkn['access_token'] + rtkn if len(
                     song_list) < 3 else json.dumps(song_list) + "?token=" + tkn['access_token'] + "&rtoken=" + rtkn, 202
             except:
                 try:
+                    if user_input.lower().startswith("category:") or user_input.lower().startswith("cat:"):
+                        if user_input.lower().startswith("category:"):
+                            cat_check = "category:"
+                        else:
+                            cat_check = "cat:"
+                        return get_category_playlists(user_input.lower()[len(cat_check):].strip(), spotifyObject)
                     song_list = get_artist_songs(user_input, spotifyObject)
                     song_list.insert(0, "Limited Selection" if len(
                         song_list) < 10 else "")
@@ -189,3 +214,17 @@ def get_suggestion_artists(artist_name):
     for artist in results['artists']['items']:
         artist_list.append(artist['name'])
     return artist_list
+
+
+def get_category_playlists(cat_name, spotify_obj=spotifyObject):
+    song_list = ["", ""]
+    for cat in spotify_obj.category_playlists(cat_name.lower().strip(), limit=3)['playlists']['items']:
+        for track in spotify_obj.playlist(cat['id'])['tracks']['items']:
+            song_name = track['track']['name'].replace(",", "{COMMA HERE}")
+            preview_url = track['track']['preview_url']
+            external_url = track['track']['external_urls']['spotify']
+
+            if song_name and preview_url and external_url and not duplicate_song_check(
+                    song_name, decouple_songs(song_list)):
+                song_list.append(f"{song_name}|#&{preview_url}|#&{external_url}")
+    return song_list
