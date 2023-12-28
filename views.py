@@ -43,7 +43,7 @@ def store_artist_check():
                     cat_check = "category:"
                 else:
                     cat_check = "cat:"
-                return get_category_playlists(user_input.lower()[len(cat_check):].strip(), spotifyObject)
+                return get_category_playlists(user_input[len(cat_check):].strip(), spotifyObject)
             else:
                 # print(user_input)
                 # print(artist_check(user_input))
@@ -71,7 +71,7 @@ def store_artist_check_custom():
                     cat_check = "category:"
                 else:
                     cat_check = "cat:"
-                return get_category_playlists(user_input.lower()[len(cat_check):], sp)
+                return get_category_playlists(user_input[len(cat_check):], sp)
             song_list = get_artist_songs(user_input, sp)
             song_list.insert(0, "Limited Selection" if len(song_list) < 10 else "")
             return "Artist_has_no_url" if len(song_list) < 3 else json.dumps(song_list), 202
@@ -91,7 +91,7 @@ def store_artist_check_custom():
                         cat_check = "category:"
                     else:
                         cat_check = "cat:"
-                    return get_category_playlists(user_input.lower()[len(cat_check):].strip(), sp)
+                    return get_category_playlists(user_input[len(cat_check):].strip(), sp)
                 song_list = get_artist_songs(user_input, sp)
                 song_list.insert(0, "Limited Selection" if len(song_list) < 10 else "")
                 return "Artist_has_no_url" + "?token=" + tkn['access_token'] + rtkn if len(
@@ -103,7 +103,7 @@ def store_artist_check_custom():
                             cat_check = "category:"
                         else:
                             cat_check = "cat:"
-                        return get_category_playlists(user_input.lower()[len(cat_check):].strip(), spotifyObject)
+                        return get_category_playlists(user_input[len(cat_check):].strip(), spotifyObject)
                     song_list = get_artist_songs(user_input, spotifyObject)
                     song_list.insert(0, "Limited Selection" if len(
                         song_list) < 10 else "")
@@ -218,13 +218,18 @@ def get_suggestion_artists(artist_name):
 
 def get_category_playlists(cat_name, spotify_obj=spotifyObject):
     song_list = ["", ""]
-    for cat in spotify_obj.category_playlists(cat_name.lower().strip(), limit=3)['playlists']['items']:
-        for track in spotify_obj.playlist(cat['id'])['tracks']['items']:
+    print(cat_name)
+    for cat in spotify_obj.category_playlists(cat_name, limit=3)['playlists']['items']:
+        for track in spotify_obj.playlist(cat['id'], additional_types=['track'])['tracks']['items']:
+            if track['track']['type'] != 'track':
+                continue
             song_name = track['track']['name'].replace(",", "{COMMA HERE}")
             preview_url = track['track']['preview_url']
             external_url = track['track']['external_urls']['spotify']
 
+
             if song_name and preview_url and external_url and not duplicate_song_check(
                     song_name, decouple_songs(song_list)):
                 song_list.append(f"{song_name}|#&{preview_url}|#&{external_url}")
+    print(song_list)
     return song_list

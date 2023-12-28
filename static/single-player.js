@@ -38,8 +38,8 @@ const animationTime = 2500;
 const modeSongTimeStr = "10"
 const modeScoreTime = 1000
 
-const categories = ['Top Lists', 'Hip-Hop', 'Pop', 'Country', 'Latin', 'Rock', 'Summer', 'Workout', 'R&B', 'Dance/Electronic', 'Netflix', 'Indie', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Hip-Hop', 'Pop', 'Country', 'Latin', 'Rock', 'Summer', 'Workout', 'R&B', 'Dance/Electronic', 'Netflix', 'Indie', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Pop', 'Country', 'Latin', 'Rock', 'Summer', 'Workout', 'R&B', 'Dance/Electronic', 'Netflix', 'Indie', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Country', 'Latin', 'Rock', 'Summer', 'Workout', 'R&B', 'Dance/Electronic', 'Netflix', 'Indie', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Latin', 'Rock', 'Summer', 'Workout', 'R&B', 'Dance/Electronic', 'Netflix', 'Indie', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Rock', 'Summer', 'Workout', 'R&B', 'Dance/Electronic', 'Netflix', 'Indie', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Summer', 'Workout', 'R&B', 'Dance/Electronic', 'Netflix', 'Indie', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Workout', 'R&B', 'Dance/Electronic', 'Netflix', 'Indie', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'R&B', 'Dance/Electronic', 'Netflix', 'Indie', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Dance/Electronic', 'Netflix', 'Indie', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Netflix', 'Indie', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Indie', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco', 'Metal', 'Caribbean', 'Funk & Disco', 'Caribbean', 'Funk & Disco', 'Funk & Disco']
-
+const categoryIDs = ['toplists', '0JQ5DAqbMKFQ00XGBls6ym', '0JQ5DAqbMKFEC4WFtoNRpw', '0JQ5DAqbMKFKLfwjuJMoNC', '0JQ5DAqbMKFxXaXKP7zcDp', '0JQ5DAqbMKFDXXwE9BDJAr', '0JQ5DAqbMKFLVaM30PMBm4', '0JQ5DAqbMKFAXlCG6QvYQ4', '0JQ5DAqbMKFEZPnFQSFB1T', '0JQ5DAqbMKFHOzuVTgTizF', '0JQ5DAqbMKFEOEBCABAxo9', '0JQ5DAqbMKFCWjUTdzaG0e', '0JQ5DAqbMKFzHmL4tf05da', '0JQ5DAqbMKFCuoRTxhYWow', '0JQ5DAqbMKFy0OenPG51Av', '0JQ5DAqbMKFDTEtSaS4R92', '0JQ5DAqbMKFLb2EqgLtpjC', '0JQ5DAqbMKFFzDl7qN9Apr', '0JQ5DAqbMKFPw634sFwguI', '0JQ5DAqbMKFCfObibaOZbv', '0JQ5DAqbMKFF9bY76LXmfI', '0JQ5DAqbMKFFoimhOqWzLB', '0JQ5DAqbMKFA6SOHvT3gck', '0JQ5DAqbMKFIVNxQgRNSg0', '0JQ5DAqbMKFImHYGo3eTSg', '0JQ5DAqbMKFAJ5xb0fwo9m', '0JQ5DAqbMKFCbimwdOYlsl', '0JQ5DAqbMKFAUsdyVjCQuL', '0JQ5DAqbMKFy78wprEpAjl', '0JQ5DAqbMKFGvOw3O4nLAf', '0JQ5DAqbMKFRieVZLLoo9m', '0JQ5DAqbMKFLjmiZRss79w', '0JQ5DAqbMKFFtlLYUHv8bT', '0JQ5DAqbMKFIRybaNTYXXy', '0JQ5DAqbMKFPrEiAOxgac3', '0JQ5DAqbMKFIpEuaCnimBj', '0JQ5DAqbMKFDBgllo2cUIN', '0JQ5DAqbMKFRY5ok2pxXJ0', '0JQ5DAqbMKFAjfauKLOZiv', '0JQ5DAqbMKFQIL0AXnG5AK', '0JQ5DAqbMKFQiK2EHwyjcU', '0JQ5DAqbMKFQVdc2eQoH2s', '0JQ5DAqbMKFQ1UFISXj59F', '0JQ5DAqbMKFOOxftoKZxod', '0JQ5DAqbMKFJw7QLnM27p6', '0JQ5DAqbMKFziKOShCi009', '0JQ5DAqbMKFRKBHIxJ5hMm', '0JQ5DAqbMKFNQ0fGp4byGU', 'comedy', '0JQ5DAqbMKFDkd668ypn6O', '0JQ5DAqbMKFObNLOHydSW8', '0JQ5DAqbMKFFsW9N8maB6z']
+const categories = ['Top Lists', 'Hip-Hop', 'Pop', 'Country', 'Latin', 'Rock', 'Summer', 'Workout', 'R&B', 'Dance/Electronic', 'Netflix', 'Indie', 'Mood', 'Sleep', 'Christian & Gospel', 'Regional Mexican', 'Wellness', 'Chill', 'EQUAL', 'Gaming', 'Frequency', 'Kids & Family', 'Party', 'Decades', 'Fresh Finds', 'Jazz', 'Focus', 'Romance', 'Folk & Acoustic', 'K-Pop', 'Instrumental', 'Ambient', 'Alternative', 'In the car', 'Classical', 'Soul', 'Spotify Singles', 'Cooking & Dining', 'Punk', 'Pop culture', 'Blues', 'Desi', 'Arab', 'RADAR', 'Student', 'Anime', 'Tastemakers', 'Afro', 'Comedy', 'Metal', 'Caribbean', 'Funk & Disco']
 
 // Global Variables
 let currentlyPlaying = false;
@@ -72,7 +72,16 @@ window.onload = () => {
         LOGIN_ICON.disabled = true
     }
     resetTokens();
+    addCategoryAutocomplete()
 };
+
+function addCategoryAutocomplete(){
+    for(let i = 0; i < categories.length; i++){
+        let option = document.createElement("option");
+        option.value = "cat:" + categories[i]
+        ARTIST_INPUT_AUTOCOMPLETE.appendChild(option);
+    }
+}
 
 window.addEventListener("resize", resetSongInputSize);
 
@@ -121,7 +130,7 @@ function playMusic(){
 }
 function resetMusic(){
     music.pause()
-    music = new Audio()
+    music.src = ""
     music.currentTime = 0;
     currentlyPlaying = false;
 }
@@ -211,13 +220,21 @@ function getCustomSongs(){
     allowPlayMusic = false;
     ARTIST_LOAD_ICON.style.opacity = "1";
     disableUserInput();
+    let artistInputValue = ARTIST_INPUT.value
+    if(ARTIST_INPUT.value.startsWith("cat:") && categories.indexOf(ARTIST_INPUT.value.substring(4)) !== -1){
+        artistInputValue = "cat:" + categoryIDs[categories.indexOf(ARTIST_INPUT.value.substring(4))]
+    }
+    else if(ARTIST_INPUT.value.startsWith("cat:")){
+        alert("Looks like that isn't a category!")
+        return
+    }
     $.ajax({
         type: "POST",
         url: "/store_artist_check_custom",
         beforeSend: function (xhr) {
             xhr.overrideMimeType("text/plain")
         },
-        data: {"input": ARTIST_INPUT.value, "token": localStorage.getItem("token"), "refreshToken": localStorage.getItem("refreshToken")},
+        data: {"input": artistInputValue, "token": localStorage.getItem("token"), "refreshToken": localStorage.getItem("refreshToken")},
     }).done(function (data) {
         cleanReturnedData(data);
     })
@@ -226,13 +243,21 @@ function getDefaultSongs(){
     allowPlayMusic = false;
     ARTIST_LOAD_ICON.style.opacity = "1";
     disableUserInput();
+    let artistInputValue = ARTIST_INPUT.value
+    if(ARTIST_INPUT.value.startsWith("cat:") && categories.indexOf(ARTIST_INPUT.value.substring(4)) !== -1){
+        artistInputValue = "cat:" + categoryIDs[categories.indexOf(ARTIST_INPUT.value.substring(4))]
+    }
+    else if(ARTIST_INPUT.value.startsWith("cat:")){
+        alert("Looks like that isn't a category!")
+        return
+    }
     $.ajax({
         type: "POST",
         url: "/store_artist_check",
         beforeSend: function (xhr) {
             xhr.overrideMimeType("text/plain")
         },
-        data: {"input": ARTIST_INPUT.value},
+        data: {"input": artistInputValue},
     }).done(function (data) {
         cleanReturnedData(data);
     })
@@ -249,7 +274,7 @@ function cleanReturnedData(data){
             data = decodeURIComponent(JSON.parse(data)); //allows for special unicode characters
             currentSongs = data.replace("[", "").replace("]", "").replace(/"/g, "").split(",");
             for(let i = 0; i < currentSongs.length; i++){
-                currentSongs[i] = currentSongs[i].replace("{COMMA HERE}",",")
+                currentSongs[i] = currentSongs[i].replaceAll("{COMMA HERE}",",")
             }
             if(currentSongs[0] === "Limited Selection"){
                 ARTIST_WARNING.style.display = "block";
@@ -276,7 +301,7 @@ function selectSong(){
     if(currentSongs.length > 0){
         let rand = getRandNumber()
         let musicStart = Math.floor(Math.random() * 20)
-        music = new Audio(currentSongs[rand].split("|#&")[1] + "#t=" + musicStart.toString() + "," + (musicStart + 10).toString());
+        music.src = currentSongs[rand].split("|#&")[1] + "#t=" + musicStart.toString() + "," + (musicStart + 10).toString();
         music.volume = .4
         currentSongName = currentSongs[rand].split("|#&")[0].trim();
         currentSongLink = currentSongs[rand].split("|#&")[2]
@@ -425,7 +450,9 @@ function cleanInput(string){
     }
     let replace = ["?","!",",",".","_","(",")","-","[","]","{","}","–"]
     for(let i = 0; i < replace.length; i++){
-        string = string.replace(replace[i], "")
+        while(string.includes(replace[i])){
+            string = string.replace(replace[i], "")
+        }
     }
     return string.toLowerCase().replace(/'/g,"").replace(/"/g,"").trim()
 }
@@ -437,7 +464,7 @@ function setSongAutocomplete(){
                 continue outerloop;
         }
         let option = document.createElement("option");
-        option.value = backupCurrentSongs[i].split("|#&")[0].trim()
+        option.value = backupCurrentSongs[i].split("|#&")[0].trim().replaceAll(",","").replaceAll(/'/g,"").replaceAll(".", "")
         SONG_INPUT_AUTOCOMPLETE.appendChild(option);
     }
 }

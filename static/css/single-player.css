@@ -102,7 +102,7 @@
   text-align: right;
   font-family: Rubik, sans-serif;
   vertical-align: middle;
-  display: table;
+  display: table-cell;
   font-weight: lighter;
   text-decoration: none;
 }
